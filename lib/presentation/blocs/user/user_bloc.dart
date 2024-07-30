@@ -2,9 +2,14 @@ import 'dart:async';
 import 'package:app_chat/data/data_sources/remote/api/api_service.dart';
 import 'package:app_chat/data/data_sources/local/db_helper.dart';
 import 'package:app_chat/data/models/user_model.dart';
+import 'package:app_chat/domain/user_cases/user_uc/get_user_use_case.dart';
+import 'package:app_chat/domain/user_cases/user_uc/update_user_use_case.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+
+import '../../../data/data_mapper/user_data_mapper.dart';
+import '../../../data/repositories_impl/user_repository_impl.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';
@@ -19,10 +24,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   void _onGetUserInfo(GetUserInfo event, Emitter<UserState> emit) async {
     emit(UserLoadingState());
+    final apiService = ApiService();
+    final userDataMapper = UserDataMapper();
+    final repository = UserRepositoryImpl(apiService, userDataMapper);
+    final getUserUseCase = GetUserUseCase(repository);
     try {
       // lấy thông tin người dùng
-      final UserModel user = await ApiService().getUserInfo(event.token);
-      final avatarImage = await ApiService().loadAvatar(user.avatar ?? '');
+      final user = await getUserUseCase.execute(event.token);
+      final avatarImage = await apiService.loadAvatar(user.avatar ?? '');
       emit(UserLoadedState(
         userName: user.userName,
         fullName: user.fullName,
@@ -30,18 +39,23 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         avatarImage: avatarImage,
       ));
     } catch (e) {
+      // print(e);
       emit(UserErrorState(e.toString()));
     }
   }
 
   void _onUpdateUserInfo(UpdateUserInfo event, Emitter<UserState> emit) async {
+    final apiService = ApiService();
+    final userDataMapper = UserDataMapper();
+    final repository = UserRepositoryImpl(apiService, userDataMapper);
+    final updateUserUseCase = UpdateUserUseCase(repository);
     try {
       if (state is UserLoadedState) {
         // chỉ xử lý khi đã tải xong thông tin trong home
-        final response = await ApiService()
-            .updateUserInfo(event.token, event.newName, event.newAvatarPath)
+        final isSuccess = await updateUserUseCase
+            .execute(event.token, event.newName, event.newAvatarPath)
             .timeout(const Duration(seconds: 5));
-        if (response == true) {
+        if (isSuccess == true) {
           add(GetUserInfo(event.token));
         }
       }

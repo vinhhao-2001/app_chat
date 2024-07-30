@@ -4,6 +4,6 @@ import 'package:app_chat/domain/entities/user_entity.dart';
 class UserDataMapper {
   UserEntity mapToUserEntity(UserModel user) {
     return UserEntity(
-        userName: user.userName, fullName: user.fullName, token: user.token);
+        userName: user.userName, fullName: user.fullName, avatar:  user.avatar, token: user.token);
   }
 }

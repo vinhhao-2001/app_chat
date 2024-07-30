@@ -11,19 +11,6 @@ class UserRepositoryImpl extends UserRepository {
 
   UserRepositoryImpl(this._apiService, this._userDataMapper);
 
-  @override
-  Future<UserEntity> register(
-      String fullName, String username, String password) async {
-    UserModel userModel =
-        await _apiService.register(fullName, username, password);
-    return _userDataMapper.mapToUserEntity(userModel);
-  }
-
-  @override
-  Future<UserEntity> login(String username, String password) async {
-    UserModel userModel = await _apiService.login(username, password);
-    return _userDataMapper.mapToUserEntity(userModel);
-  }
 
   @override
   Future<UserEntity> getUser(String token) async {

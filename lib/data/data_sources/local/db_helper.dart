@@ -120,7 +120,7 @@ class DatabaseHelper {
     // thêm biệt danh cho bạn bè
     final db = await database;
     await db.update(
-      'friends',
+      ApiConstants.friendTable,
       {ApiConstants.nickname: nickname},
       where: '${ApiConstants.friendId} = ?',
       whereArgs: [friendID],

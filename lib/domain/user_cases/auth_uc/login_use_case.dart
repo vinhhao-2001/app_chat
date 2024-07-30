@@ -1,9 +1,8 @@
-import 'package:app_chat/domain/repositories/user_repository.dart';
-
-import '../entities/user_entity.dart';
+import '../../entities/user_entity.dart';
+import '../../repositories/auth_repository.dart';
 
 class LoginUseCase {
-  final UserRepository _repository;
+  final AuthRepository _repository;
 
   LoginUseCase(this._repository);
 

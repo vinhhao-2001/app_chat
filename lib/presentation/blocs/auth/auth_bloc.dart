@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:app_chat/data/data_mapper/user_data_mapper.dart';
 import 'package:app_chat/data/data_sources/remote/api/api_service.dart';
-import 'package:app_chat/data/repositories_impl/user_repository_impl.dart';
-import 'package:app_chat/domain/user_cases/login_use_case.dart';
-import 'package:app_chat/domain/user_cases/register_use_case.dart';
+import 'package:app_chat/data/repositories_impl/auth_repository_impl.dart';
+import 'package:app_chat/domain/user_cases/auth_uc/login_use_case.dart';
+import 'package:app_chat/domain/user_cases/auth_uc/register_use_case.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/theme/app_text.dart';
@@ -23,7 +23,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     final apiService = ApiService();
     final userDataMapper = UserDataMapper();
-    final repository = UserRepositoryImpl(apiService, userDataMapper);
+    final repository = AuthRepositoryImpl(apiService, userDataMapper);
     final loginUseCase = LoginUseCase(repository);
     String? errorMessage;
     if (event.username.isEmpty) {
@@ -58,7 +58,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     final apiService = ApiService();
     final userDataMapper = UserDataMapper();
-    final repository = UserRepositoryImpl(apiService, userDataMapper);
+    final repository = AuthRepositoryImpl(apiService, userDataMapper);
     RegisterUseCase registerUseCase = RegisterUseCase(repository);
     String? errorMessage;
 
