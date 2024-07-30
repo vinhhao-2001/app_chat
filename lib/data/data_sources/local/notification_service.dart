@@ -1,6 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import '../../../core/constants/text_constants.dart';
+import '../../../core/theme/text_constants.dart';
 
 class NotificationService {
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;

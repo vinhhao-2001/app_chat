@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'core/constants/text_constants.dart';
+import 'core/theme/text_constants.dart';
 import 'presentation/blocs/user/user_bloc.dart';
 import 'presentation/blocs/chat/chat_bloc.dart';
 import 'presentation/blocs/friend/friend_bloc.dart';

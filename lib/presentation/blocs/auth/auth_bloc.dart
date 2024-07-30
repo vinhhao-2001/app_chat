@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/constants/text_constants.dart';
+import '../../../core/theme/text_constants.dart';
 import '../../../data/data_sources/remote/api/api_service.dart';
 import '../../../data/models/user_model.dart';
 

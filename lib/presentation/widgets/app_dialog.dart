@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/constants/color_constants.dart';
-import '../../core/constants/text_constants.dart';
+import '../../core/theme/text_constants.dart';
 
 class AppDialog {
   static void showErrorMessageDialog(

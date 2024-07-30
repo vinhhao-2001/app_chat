@@ -12,7 +12,7 @@ import 'package:photo_manager/photo_manager.dart';
 
 import '../../core/constants/asset_constants.dart';
 import '../../core/constants/color_constants.dart';
-import '../../core/constants/text_constants.dart';
+import '../../core/theme/text_constants.dart';
 import '../../data/data_sources/local/data.dart';
 import '../../data/data_sources/local/db_helper.dart';
 import '../../data/data_sources/remote/api/api_service.dart';
