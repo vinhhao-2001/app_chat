@@ -1,11 +1,12 @@
 import 'dart:async';
-
+import 'package:app_chat/data/data_mapper/user_data_mapper.dart';
+import 'package:app_chat/data/data_sources/remote/api/api_service.dart';
+import 'package:app_chat/data/repositories_impl/user_repository_impl.dart';
+import 'package:app_chat/domain/user_cases/login_use_case.dart';
+import 'package:app_chat/domain/user_cases/register_use_case.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../core/theme/app_text.dart';
-import '../../../data/data_sources/remote/api/api_service.dart';
-import '../../../data/models/user_model.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -20,6 +21,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     LoginButtonEvent event,
     Emitter<AuthState> emit,
   ) async {
+    final apiService = ApiService();
+    final userDataMapper = UserDataMapper();
+    final repository = UserRepositoryImpl(apiService, userDataMapper);
+    final loginUseCase = LoginUseCase(repository);
     String? errorMessage;
     if (event.username.isEmpty) {
       errorMessage = AppText.userNameEmpty;
@@ -34,8 +39,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoadingState());
 
     try {
-      final UserModel user = await ApiService()
-          .login(event.username, event.password)
+      final user = await loginUseCase
+          .execute(event.username, event.password)
           .timeout(const Duration(seconds: 5));
       emit(AuthSuccessState(user.token));
     } catch (error) {
@@ -51,6 +56,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     RegisterButtonEvent event,
     Emitter<AuthState> emit,
   ) async {
+    final apiService = ApiService();
+    final userDataMapper = UserDataMapper();
+    final repository = UserRepositoryImpl(apiService, userDataMapper);
+    RegisterUseCase registerUseCase = RegisterUseCase(repository);
     String? errorMessage;
 
     if (event.fullName.isEmpty) {
@@ -73,8 +82,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoadingState());
 
     try {
-      final UserModel user = await ApiService()
-          .register(event.fullName, event.username, event.password)
+      final user = await registerUseCase
+          .execute(event.fullName, event.username, event.password)
           .timeout(const Duration(seconds: 5));
       emit(AuthSuccessState(user.token));
     } catch (error) {

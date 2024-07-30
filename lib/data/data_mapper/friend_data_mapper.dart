@@ -6,7 +6,6 @@ class FriendDataMapper {
     return FriendEntity(
         friendID: friend.friendID,
         fullName: friend.fullName,
-        username: friend.username,
         avatar: friend.avatar,
         content: friend.content,
         files: friend.files,

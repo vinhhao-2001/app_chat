@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/theme/app_color.dart';
 import '../../core/theme/app_text.dart';
-
 import '../blocs/auth/auth_bloc.dart';
 import '../widgets/widget.dart';
 import 'home_screen.dart';
@@ -19,7 +18,6 @@ class LoginScreen extends StatefulWidget {
 class _BodyLoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

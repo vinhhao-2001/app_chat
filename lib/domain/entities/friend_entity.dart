@@ -1,7 +1,6 @@
 class FriendEntity {
   final String friendID;
   final String fullName;
-  final String username;
   final String avatar;
   final String content;
   final List<dynamic> files;
@@ -13,7 +12,6 @@ class FriendEntity {
   FriendEntity({
     required this.friendID,
     required this.fullName,
-    required this.username,
     required this.avatar,
     required this.content,
     required this.files,
