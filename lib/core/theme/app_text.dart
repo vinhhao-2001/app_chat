@@ -1,4 +1,4 @@
-class TextConstants {
+class AppText {
   // tên các thành phần giao diện
   static const String appName = 'Bkav Chat';
 

@@ -39,7 +39,7 @@ class NotificationService {
         iOS: const DarwinNotificationDetails());
     await flutterLocalNotificationsPlugin.show(
       0,
-      '${TextConstants.showDownloading} $fileName',
+      '${AppText.showDownloading} $fileName',
       '${(progress / maxProgress * 100).toStringAsFixed(0)}%',
       platformChannelSpecifics,
     );
@@ -60,8 +60,8 @@ class NotificationService {
         iOS: DarwinNotificationDetails());
     await flutterLocalNotificationsPlugin.show(
       0,
-      TextConstants.showDownloaded,
-      '${TextConstants.textFile} $fileName',
+      AppText.showDownloaded,
+      '${AppText.textFile} $fileName',
       platformChannelSpecifics,
       payload: 'item x',
     );
@@ -82,8 +82,8 @@ class NotificationService {
         iOS: DarwinNotificationDetails());
     await flutterLocalNotificationsPlugin.show(
       0,
-      TextConstants.showErrorDownload,
-      '${TextConstants.textFile} $fileName',
+      AppText.showErrorDownload,
+      '${AppText.textFile} $fileName',
       platformChannelSpecifics,
       payload: 'item x',
     );

@@ -43,7 +43,7 @@ class _BodyLoginScreenState extends State<LoginScreen> {
             child: Scaffold(
               appBar: AppBar(
                 title: const Text(
-                  TextConstants.appName,
+                  AppText.appName,
                 ),
                 foregroundColor: Colors.blue,
               ),
@@ -56,7 +56,7 @@ class _BodyLoginScreenState extends State<LoginScreen> {
                       children: [
                         const SizedBox(height: 100),
                         const Text(
-                          TextConstants.textUser,
+                          AppText.textUser,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -65,10 +65,10 @@ class _BodyLoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 8),
                         TextInputWidget(
                             textEditingController: _usernameController,
-                            hintText: TextConstants.hintTextUser),
+                            hintText: AppText.hintTextUser),
                         const SizedBox(height: 20),
                         const Text(
-                          TextConstants.textPassword,
+                          AppText.textPassword,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -77,7 +77,7 @@ class _BodyLoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 8),
                         PasswordInputWidget(
                             textEditingController: _passwordController,
-                            hintText: TextConstants.hintTextPassword),
+                            hintText: AppText.hintTextPassword),
                         const SizedBox(height: 100),
                         Column(
                           children: [
@@ -92,10 +92,10 @@ class _BodyLoginScreenState extends State<LoginScreen> {
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: ColorConstants.buttonColor,
+                                backgroundColor: AppColor.buttonColor,
                               ),
                               child: const Text(
-                                TextConstants.textLogin,
+                                AppText.textLogin,
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
@@ -110,9 +110,9 @@ class _BodyLoginScreenState extends State<LoginScreen> {
                                 );
                               },
                               child: const Text(
-                                TextConstants.textRegister,
+                                AppText.textRegister,
                                 style: TextStyle(
-                                    color: ColorConstants.textRegisterColor),
+                                    color: AppColor.textRegisterColor),
                               ),
                             ),
                           ],

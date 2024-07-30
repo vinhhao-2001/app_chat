@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ColorConstants {
+class AppColor {
   static const Color appNameColor = Color(0xFF1C6DCF);
   static const Color transparent = Color(0x00000000);
   static const Color bluColor = Color(0xFF00FF00);

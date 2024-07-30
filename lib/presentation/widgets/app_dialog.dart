@@ -18,13 +18,13 @@ class AppDialog {
             },
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
-              backgroundColor: ColorConstants.buttonColor,
+              backgroundColor: AppColor.buttonColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4.0),
               ),
             ),
             child: const Center(
-              child: Text(TextConstants.textOk, textAlign: TextAlign.center),
+              child: Text(AppText.textOk, textAlign: TextAlign.center),
             ),
           ),
         ],

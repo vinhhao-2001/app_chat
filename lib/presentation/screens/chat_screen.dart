@@ -100,7 +100,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         lastTime =
                             DateTime.now().subtract(const Duration(hours: 7));
                         return const Center(
-                            child: Text(TextConstants.textChatEmpty));
+                            child: Text(AppText.textChatEmpty));
                       }
                     } else if (state is ChatNewMessageAddedState) {
                       final messages = state.messages;
@@ -115,7 +115,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       log(state.message);
                     }
                     return const Center(
-                        child: Text(TextConstants.textChatEmpty));
+                        child: Text(AppText.textChatEmpty));
                   },
                 ),
               ),
@@ -176,8 +176,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     Text(
                       selectedFriend.isOnline
-                          ? TextConstants.online
-                          : TextConstants.offline,
+                          ? AppText.online
+                          : AppText.offline,
                       style: const TextStyle(
                         fontStyle: FontStyle.italic,
                       ),
@@ -244,9 +244,9 @@ class _ChatScreenState extends State<ChatScreen> {
               controller: _textEditController,
               focusNode: _focusNode,
               decoration: InputDecoration(
-                fillColor: ColorConstants.fillColor,
+                fillColor: AppColor.fillColor,
                 filled: true,
-                hintText: TextConstants.hintTextChat,
+                hintText: AppText.hintTextChat,
                 hintStyle: const TextStyle(fontStyle: FontStyle.italic),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
@@ -379,8 +379,8 @@ class _ChatScreenState extends State<ChatScreen> {
           if (_selectedImages.isNotEmpty)
             ElevatedButton(
               onPressed: _sendSelectedImages,
-              child: Text('${TextConstants.textSend} ${_selectedImages.length} '
-                  '${TextConstants.textImage}'),
+              child: Text('${AppText.textSend} ${_selectedImages.length} '
+                  '${AppText.textImage}'),
             ),
         ],
       ),
@@ -406,8 +406,8 @@ class _ChatScreenState extends State<ChatScreen> {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: isMe
-                    ? ColorConstants.backgroundSendColor
-                    : ColorConstants.backgroundGetColor,
+                    ? AppColor.backgroundSendColor
+                    : AppColor.backgroundGetColor,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: ConstrainedBox(
@@ -418,8 +418,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   message.content,
                   style: TextStyle(
                     color: isMe
-                        ? ColorConstants.chatSendColor
-                        : ColorConstants.chatGetColor,
+                        ? AppColor.chatSendColor
+                        : AppColor.chatGetColor,
                   ),
                   softWrap: true,
                 ),
@@ -453,8 +453,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: isMe
-                        ? ColorConstants.backgroundSendColor
-                        : ColorConstants.backgroundGetColor,
+                        ? AppColor.backgroundSendColor
+                        : AppColor.backgroundGetColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: ConstrainedBox(
@@ -480,8 +480,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                 fileData.fileName,
                                 style: TextStyle(
                                   color: isMe
-                                      ? ColorConstants.chatSendColor
-                                      : ColorConstants.chatGetColor,
+                                      ? AppColor.chatSendColor
+                                      : AppColor.chatGetColor,
                                 ),
                                 softWrap: true,
                               ),
@@ -489,8 +489,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                 '${(3000 / 1024).toStringAsFixed(2)} MB',
                                 style: TextStyle(
                                   color: isMe
-                                      ? ColorConstants.chatSendColor
-                                      : ColorConstants.chatGetColor,
+                                      ? AppColor.chatSendColor
+                                      : AppColor.chatGetColor,
                                   fontSize: 12,
                                 ),
                               ),
@@ -575,7 +575,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           child: Text(
             ApiService().formatMessageTime(message.createdAt),
-            style: const TextStyle(color: ColorConstants.textTime),
+            style: const TextStyle(color: AppColor.textTime),
           ),
         ),
         if (isMe && isLastMessageByMe)
@@ -621,20 +621,20 @@ class _ChatScreenState extends State<ChatScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(TextConstants.textNickname),
+          title: const Text(AppText.textNickname),
           content: TextField(
             controller: controller,
             decoration: const InputDecoration(
-              hintText: TextConstants.hintTextNickname,
+              hintText: AppText.hintTextNickname,
             ),
           ),
           actions: [
             TextButton(
-              child: const Text(TextConstants.textCancel),
+              child: const Text(AppText.textCancel),
               onPressed: () => Navigator.of(context).pop(),
             ),
             TextButton(
-              child: const Text(TextConstants.textOk),
+              child: const Text(AppText.textOk),
               onPressed: () async {
                 if (controller.text.isNotEmpty) {
                   selectedFriend.nickname = controller.text;
@@ -646,7 +646,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text(TextConstants.nicknameEmpty),
+                      content: Text(AppText.nicknameEmpty),
                     ),
                   );
                 }

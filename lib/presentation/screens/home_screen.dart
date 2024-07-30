@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _buildSearchBarWidget(context, searchController),
             const SizedBox(height: 20),
             const Text(
-              TextConstants.textFriendList,
+              AppText.textFriendList,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -72,9 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const Text(
-          TextConstants.appName,
+          AppText.appName,
           style: TextStyle(
-            color: ColorConstants.appNameColor,
+            color: AppColor.appNameColor,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onChanged: (query) =>
           context.read<FriendBloc>().add(SearchFriends(query)),
       decoration: InputDecoration(
-        hintText: TextConstants.hintTextSearch,
+        hintText: AppText.hintTextSearch,
         prefixIcon: const Icon(Icons.search),
         suffixIcon: IconButton(
           icon: const Icon(Icons.close),
@@ -210,25 +210,25 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? Text(
                               friend.content,
                               style: const TextStyle(
-                                  color: ColorConstants.contentColor,
+                                  color: AppColor.contentColor,
                                   fontStyle: FontStyle.italic),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             )
                           : friend.images.isNotEmpty
                               ? Text(
-                                  '${TextConstants.textSent} ${friend.images.length} ${TextConstants.textImage}',
+                                  '${AppText.textSent} ${friend.images.length} ${AppText.textImage}',
                                   style: const TextStyle(
-                                      color: ColorConstants.contentColor,
+                                      color: AppColor.contentColor,
                                       fontStyle: FontStyle.italic),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                 )
                               : friend.files.isNotEmpty
                                   ? Text(
-                                      '${TextConstants.textSent} ${friend.files.length} ${TextConstants.textFile}',
+                                      '${AppText.textSent} ${friend.files.length} ${AppText.textFile}',
                                       style: const TextStyle(
-                                          color: ColorConstants.contentColor,
+                                          color: AppColor.contentColor,
                                           fontStyle: FontStyle.italic),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
@@ -282,11 +282,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const PopupMenuItem(
           value: 2,
-          child: Text(TextConstants.textChangeAvatar),
+          child: Text(AppText.textChangeAvatar),
         ),
         const PopupMenuItem(
           value: 3,
-          child: Text(TextConstants.textLogout),
+          child: Text(AppText.textLogout),
         ),
       ],
     ).then((value) {
@@ -316,18 +316,18 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text(TextConstants.textChangeName),
+          title: const Text(AppText.textChangeName),
           content: TextField(
             controller: nameController,
             decoration:
-                const InputDecoration(hintText: TextConstants.hintTextNewName),
+                const InputDecoration(hintText: AppText.hintTextNewName),
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text(TextConstants.textCancel),
+              child: const Text(AppText.textCancel),
             ),
             TextButton(
               onPressed: () {
@@ -335,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     UpdateUserInfo(widget.token, nameController.text, null));
                 Navigator.of(context).pop();
               },
-              child: const Text(TextConstants.textOk),
+              child: const Text(AppText.textOk),
             ),
           ],
         );

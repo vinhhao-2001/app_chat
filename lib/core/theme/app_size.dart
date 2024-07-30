@@ -1,3 +1,3 @@
-class SizeConstants{
+class AppSize{
 
 }

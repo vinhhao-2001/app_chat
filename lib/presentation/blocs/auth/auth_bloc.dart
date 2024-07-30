@@ -22,9 +22,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     String? errorMessage;
     if (event.username.isEmpty) {
-      errorMessage = TextConstants.userNameEmpty;
+      errorMessage = AppText.userNameEmpty;
     } else if (event.password.isEmpty) {
-      errorMessage = TextConstants.passwordEmpty;
+      errorMessage = AppText.passwordEmpty;
     }
     if (errorMessage != null) {
       emit(AuthFailureState(errorMessage));
@@ -40,7 +40,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthSuccessState(user.token));
     } catch (error) {
       if (error is TimeoutException) {
-        emit(const AuthFailureState(TextConstants.internetError));
+        emit(const AuthFailureState(AppText.internetError));
       } else {
         emit(AuthFailureState(error.toString()));
       }
@@ -54,15 +54,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     String? errorMessage;
 
     if (event.fullName.isEmpty) {
-      errorMessage = TextConstants.fullNameEmpty;
+      errorMessage = AppText.fullNameEmpty;
     } else if (event.username.isEmpty) {
-      errorMessage = TextConstants.userNameEmpty;
+      errorMessage = AppText.userNameEmpty;
     } else if (event.password.isEmpty) {
-      errorMessage = TextConstants.passwordEmpty;
+      errorMessage = AppText.passwordEmpty;
     } else if (event.confirmPassword.isEmpty) {
-      errorMessage = TextConstants.confirmPasswordEmpty;
+      errorMessage = AppText.confirmPasswordEmpty;
     } else if (event.password != event.confirmPassword) {
-      errorMessage = TextConstants.passwordError;
+      errorMessage = AppText.passwordError;
     }
 
     if (errorMessage != null) {
@@ -79,7 +79,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthSuccessState(user.token));
     } catch (error) {
       if (error is TimeoutException) {
-        emit(const AuthFailureState(TextConstants.internetError));
+        emit(const AuthFailureState(AppText.internetError));
       } else {
         emit(AuthFailureState(error.toString()));
       }

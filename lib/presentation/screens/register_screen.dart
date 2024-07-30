@@ -60,7 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Container(
                           alignment: Alignment.center,
                           child: const Text(
-                            TextConstants.textCreateUser,
+                            AppText.textCreateUser,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -75,7 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  TextConstants.textFullName,
+                                  AppText.textFullName,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -83,10 +83,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 const SizedBox(height: 8),
                                 TextInputWidget(
                                     textEditingController: _fullNameController,
-                                    hintText: TextConstants.hintTextFullName),
+                                    hintText: AppText.hintTextFullName),
                                 const SizedBox(height: 20),
                                 const Text(
-                                  TextConstants.textUser,
+                                  AppText.textUser,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -94,10 +94,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 const SizedBox(height: 8),
                                 TextInputWidget(
                                     textEditingController: _usernameController,
-                                    hintText: TextConstants.hintTextUser),
+                                    hintText: AppText.hintTextUser),
                                 const SizedBox(height: 20),
                                 const Text(
-                                  TextConstants.textPassword,
+                                  AppText.textPassword,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -105,10 +105,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 const SizedBox(height: 8),
                                 PasswordInputWidget(
                                     textEditingController: _passwordController,
-                                    hintText: TextConstants.hintTextPassword),
+                                    hintText: AppText.hintTextPassword),
                                 const SizedBox(height: 20),
                                 const Text(
-                                  TextConstants.hintTextConfirmPassword,
+                                  AppText.hintTextConfirmPassword,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -118,7 +118,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     textEditingController:
                                         _confirmPasswordController,
                                     hintText:
-                                        TextConstants.hintTextConfirmPassword),
+                                        AppText.hintTextConfirmPassword),
                                 const SizedBox(height: 20),
                                 ElevatedButton(
                                   onPressed: () {
@@ -144,10 +144,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   style: ElevatedButton.styleFrom(
                                     minimumSize:
                                         const Size(double.infinity, 40),
-                                    backgroundColor: ColorConstants.buttonColor,
+                                    backgroundColor: AppColor.buttonColor,
                                   ),
                                   child: const Text(
-                                    TextConstants.textCreateUser,
+                                    AppText.textCreateUser,
                                     style: TextStyle(
                                       color: Colors.white,
                                     ),

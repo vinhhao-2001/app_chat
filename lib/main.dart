@@ -58,7 +58,7 @@ class SplashScreen extends StatelessWidget {
                 size: 100,
               ),
               Text(
-                TextConstants.appName,
+                AppText.appName,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ],
