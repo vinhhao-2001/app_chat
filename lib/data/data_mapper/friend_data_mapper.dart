@@ -2,7 +2,7 @@ import 'package:app_chat/data/models/friend_model.dart';
 import 'package:app_chat/domain/entities/friend_entity.dart';
 
 class FriendDataMapper {
-  static FriendEntity mapToFriendEntity(FriendModel friend) {
+  FriendEntity mapToFriendEntity(FriendModel friend) {
     return FriendEntity(
         friendID: friend.friendID,
         fullName: friend.fullName,

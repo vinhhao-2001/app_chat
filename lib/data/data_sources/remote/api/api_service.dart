@@ -136,7 +136,7 @@ class ApiService {
   }
 
   // lấy danh sách bạn bè
-  Future<List<FriendModel>> getListFriends(String token) async {
+  Future<List<FriendModel>> getFriendList(String token) async {
     const String listFriendsUrl = '$baseUrl${ApiConstants.apiListFriend}';
     try {
       // gửi server

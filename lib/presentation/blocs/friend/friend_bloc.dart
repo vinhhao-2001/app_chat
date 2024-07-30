@@ -16,7 +16,7 @@ class FriendBloc extends Bloc<FriendEvent, FriendState> {
       emit(FriendLoading());
       try {
         // lấy danh sách bạn bè ở server.
-        friendList = await ApiService().getListFriends(event.token);
+        friendList = await ApiService().getFriendList(event.token);
         if (friendList.isNotEmpty) {
           friendList.sort((a, b) =>
               a.fullName.toLowerCase().compareTo(b.fullName.toLowerCase()));
