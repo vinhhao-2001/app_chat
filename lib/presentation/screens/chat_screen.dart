@@ -11,8 +11,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../core/constants/asset_constants.dart';
-import '../../core/theme/color_constants.dart';
-import '../../core/theme/text_constants.dart';
+import '../../core/theme/app_color.dart';
+import '../../core/theme/app_text.dart';
 import '../../data/data_sources/local/data.dart';
 import '../../data/data_sources/local/db_helper.dart';
 import '../../data/data_sources/remote/api/api_service.dart';
