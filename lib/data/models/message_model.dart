@@ -20,6 +20,7 @@ class MessageModel {
     required this.createdAt,
     required this.messageType,
   });
+
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     List<FileData> files = [];
     if (json.containsKey(ApiConstants.files)) {
@@ -44,6 +45,7 @@ class MessageModel {
       messageType: json[ApiConstants.messageType],
     );
   }
+
   Map<String, dynamic> toMap() {
     return {
       ApiConstants.id: id,

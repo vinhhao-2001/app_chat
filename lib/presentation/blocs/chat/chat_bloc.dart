@@ -30,7 +30,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         _messageList.addAll(messageDB);
         emit(ChatLoadedState(_messageList));
         // lấy những tin nhắn mới ở server
-        final messageServer = await ApiService().getMessage(
+        final messageServer = await ApiService().getMessageList(
             event.token, event.friendID,
             lastTime: messageDB.last.createdAt);
         if (messageServer.isNotEmpty) {
@@ -40,7 +40,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       } else {
         // db rỗng thì lấy toàn bộ tin ở server
         final messageServer =
-            await ApiService().getMessage(event.token, event.friendID);
+            await ApiService().getMessageList(event.token, event.friendID);
         _messageList.addAll(messageServer);
         await DatabaseHelper().insertMessages(event.friendID, messageServer);
       }
@@ -49,7 +49,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       // lấy tin nhắn định kì
       log(event.lastTime.toString());
       final messagesNew = await ApiService()
-          .getMessage(event.token, event.friendID, lastTime: event.lastTime);
+          .getMessageList(event.token, event.friendID, lastTime: event.lastTime);
       if (messagesNew.isNotEmpty) {
         _messageList.addAll(messagesNew);
         emit(ChatNewMessageAddedState(_messageList));

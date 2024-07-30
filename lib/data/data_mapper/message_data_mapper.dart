@@ -2,7 +2,7 @@ import 'package:app_chat/data/models/message_model.dart';
 import 'package:app_chat/domain/entities/message_entity.dart';
 
 class MessageDataMapper {
-  static MessageEntity mapToFriendEntity(MessageModel message) {
+  MessageEntity mapToMessageEntity(MessageModel message) {
     return MessageEntity(
         content: message.content,
         files: message.files,

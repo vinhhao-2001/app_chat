@@ -206,7 +206,7 @@ class ApiService {
   }
 
   // lấy tin nhắn
-  Future<List<MessageModel>> getMessage(String token, String friendID,
+  Future<List<MessageModel>> getMessageList(String token, String friendID,
       {DateTime? lastTime}) async {
     const String messageUrl = '$baseUrl${ApiConstants.apiGetMessage}';
     Uri uri = Uri.parse(messageUrl).replace(queryParameters: {
