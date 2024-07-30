@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/color_constants.dart';
+import '../../core/theme/color_constants.dart';
 import '../../core/theme/text_constants.dart';
 
 class AppDialog {

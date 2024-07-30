@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../core/constants/color_constants.dart';
+import '../../core/theme/color_constants.dart';
 import '../../core/theme/text_constants.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../widgets/widget.dart';

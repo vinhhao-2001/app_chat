@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../core/constants/asset_constants.dart';
-import '../../core/constants/color_constants.dart';
+import '../../core/theme/color_constants.dart';
 import '../../core/theme/text_constants.dart';
 import '../../data/data_sources/remote/api/api_service.dart';
 import '../blocs/user/user_bloc.dart';
