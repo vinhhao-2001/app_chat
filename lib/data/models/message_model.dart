@@ -1,4 +1,6 @@
 import '../../core/constants/api_constants.dart';
+import '../../core/data_types/file_data.dart';
+import '../../core/data_types/image_data.dart';
 
 class MessageModel {
   final String? id;
@@ -50,45 +52,5 @@ class MessageModel {
       ApiConstants.createdAt: createdAt.toIso8601String(),
       ApiConstants.messageType: messageType
     };
-  }
-}
-
-class FileData {
-  final String urlFile;
-  final String fileName;
-  final String? id;
-
-  FileData({
-    required this.urlFile,
-    required this.fileName,
-    this.id,
-  });
-
-  factory FileData.fromJson(Map<String, dynamic> json) {
-    return FileData(
-      urlFile: json[ApiConstants.urlFile],
-      fileName: json[ApiConstants.filename],
-      id: json[ApiConstants.idUnder],
-    );
-  }
-}
-
-class ImageData {
-  final String urlImage;
-  final String fileName;
-  final String? id;
-
-  ImageData({
-    required this.urlImage,
-    required this.fileName,
-    this.id,
-  });
-
-  factory ImageData.fromJson(Map<String, dynamic> json) {
-    return ImageData(
-      urlImage: json[ApiConstants.urlImage],
-      fileName: json[ApiConstants.filename],
-      id: json[ApiConstants.idUnder],
-    );
   }
 }

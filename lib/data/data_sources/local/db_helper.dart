@@ -7,6 +7,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 import '../../../core/constants/api_constants.dart';
+import '../../../core/data_types/file_data.dart';
+import '../../../core/data_types/image_data.dart';
 import '../../models/friend_model.dart';
 import '../../models/message_model.dart';
 import '../../models/user_model.dart';

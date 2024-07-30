@@ -1,4 +1,5 @@
-import '../../data/models/message_model.dart';
+import '../../core/data_types/file_data.dart';
+import '../../core/data_types/image_data.dart';
 
 class MessageEntity {
   final String? id;

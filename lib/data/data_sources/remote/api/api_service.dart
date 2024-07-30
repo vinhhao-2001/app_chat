@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../../../core/constants/api_constants.dart';
 import '../../../../core/constants/asset_constants.dart';
+import '../../../../core/data_types/file_data.dart';
 import '../../../models/friend_model.dart';
 import '../../../models/message_model.dart';
 import '../../../models/user_model.dart';
