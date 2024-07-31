@@ -6,8 +6,7 @@ class GetMessageListUseCase {
 
   GetMessageListUseCase(this._repository);
 
-  Future<List<MessageEntity>> execute(String token, String friendID,
-      {DateTime? lastTime}) async {
+  Future<List<MessageEntity>> execute(String token, String friendID) async {
     return await _repository.getMessageList(token, friendID);
   }
 }

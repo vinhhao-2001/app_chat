@@ -1,11 +1,13 @@
 import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../data/data_sources/remote/api/api_service.dart';
 
+import '../../../domain/user_cases/shared_uc/load_avatar_use_case.dart';
 import '../../../domain/user_cases/user_uc/get_user_use_case.dart';
 import '../../../domain/user_cases/user_uc/update_user_use_case.dart';
+
 import '../../../main.dart';
 
 part 'user_event.dart';
@@ -20,10 +22,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   void _onGetUserInfo(GetUserInfo event, Emitter<UserState> emit) async {
     emit(UserLoadingState());
     final getUserUseCase = getIt<GetUserUseCase>();
+    final loadAvatar = getIt<LoadAvatarUseCase>();
+
     try {
       // lấy thông tin người dùng
       final user = await getUserUseCase.execute(event.token);
-      final avatarImage = await ApiService().loadAvatar(user.avatar ?? '');
+
+      final avatarImage = await loadAvatar.execute(user.avatar);
       emit(UserLoadedState(
         userName: user.userName,
         fullName: user.fullName,

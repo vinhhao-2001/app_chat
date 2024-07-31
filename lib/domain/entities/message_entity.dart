@@ -5,7 +5,7 @@ class MessageEntity {
   final String content;
   final List<FileData> files;
   final List<ImageData> images;
-  final int isSend;
+  int isSend;
   final DateTime createdAt;
   final int messageType;
 

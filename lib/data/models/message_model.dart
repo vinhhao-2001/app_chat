@@ -3,7 +3,7 @@ import '../../core/data_types/file_data.dart';
 import '../../core/data_types/image_data.dart';
 
 class MessageModel {
-  final String? id;
+  final String id;
   final String content;
   final List<FileData> files;
   final List<ImageData> images;
@@ -12,7 +12,7 @@ class MessageModel {
   final int messageType;
 
   MessageModel({
-    this.id,
+    required this.id,
     required this.content,
     required this.files,
     required this.images,

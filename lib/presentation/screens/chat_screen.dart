@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:app_chat/domain/entities/friend_entity.dart';
+import 'package:app_chat/domain/entities/message_entity.dart';
+import 'package:app_chat/domain/user_cases/shared_uc/load_avatar_use_case.dart';
+import 'package:app_chat/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -19,9 +22,9 @@ import '../../core/theme/app_text.dart';
 import '../../data/data_sources/local/data.dart';
 import '../../data/data_sources/local/db_helper.dart';
 import '../../data/data_sources/remote/api/api_service.dart';
-import '../../data/models/message_model.dart';
 import '../blocs/chat/chat_bloc.dart';
 import '../blocs/friend/friend_bloc.dart';
+import '../widgets/widget.dart';
 
 class ChatScreen extends StatefulWidget {
   final String friendID;
@@ -89,7 +92,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: BlocBuilder<ChatBloc, ChatState>(
                   builder: (context, state) {
                     if (state is ChatLoadingState) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(child: LoadingWidget(size: 60));
                     } else if (state is ChatLoadedState) {
                       final messages = state.messages;
                       if (messages.isNotEmpty) {
@@ -102,15 +105,6 @@ class _ChatScreenState extends State<ChatScreen> {
                         lastTime =
                             DateTime.now().subtract(const Duration(hours: 7));
                         return const Center(child: Text(AppText.textChatEmpty));
-                      }
-                    } else if (state is ChatNewMessageAddedState) {
-                      final messages = state.messages;
-                      if (messages.isNotEmpty) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          _scrollToBottom();
-                        });
-                        lastTime = messages.last.createdAt;
-                        return _buildMessageList(messages);
                       }
                     } else if (state is ChatErrorState) {
                       log(state.message);
@@ -194,7 +188,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildMessageList(List<MessageModel> messageList) {
+  Widget _buildMessageList(List<MessageEntity> messageList) {
     return ListView.builder(
       controller: _scrollController,
       itemCount: messageList.length,
@@ -387,7 +381,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildMessageContent(bool isMe, MessageModel message) {
+  Widget _buildMessageContent(bool isMe, MessageEntity message) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Row(
@@ -430,7 +424,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildMessageFiles(bool isMe, MessageModel message) {
+  Widget _buildMessageFiles(bool isMe, MessageEntity message) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Row(
@@ -508,7 +502,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildMessageImages(bool isMe, MessageModel message) {
+  Widget _buildMessageImages(bool isMe, MessageEntity message) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Row(
@@ -563,7 +557,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildMessageFooter(
-      bool isMe, MessageModel message, bool isLastMessageByMe, int index) {
+      bool isMe, MessageEntity message, bool isLastMessageByMe, int index) {
     return Row(
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
@@ -666,8 +660,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _sendMessage() {
     if (_textEditController.text.trim().isNotEmpty) {
-      final newMessage = MessageModel(
-        id: '',
+      final newMessage = MessageEntity(
         content: _textEditController.text,
         createdAt: DateTime.now().subtract(const Duration(hours: 7)),
         messageType: 1,
@@ -696,7 +689,7 @@ class _ChatScreenState extends State<ChatScreen> {
     for (var image in _selectedImages) {
       final file = await image.file;
       if (file != null) {
-        final newMessage = MessageModel(
+        final newMessage = MessageEntity(
           content: '',
           createdAt: DateTime.now(),
           messageType: 1,
@@ -760,7 +753,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _sendFiles(List<FileData> fileDataList) async {
-    final newMessage = MessageModel(
+    final newMessage = MessageEntity(
       content: '',
       createdAt: DateTime.now(),
       messageType: 1,
@@ -773,7 +766,7 @@ class _ChatScreenState extends State<ChatScreen> {
         .add(SendMessage(widget.token, widget.friendID, newMessage));
   }
 
-  bool _isLastMessageByMe(int index, List<MessageModel> messageList) {
+  bool _isLastMessageByMe(int index, List<MessageEntity> messageList) {
     for (int i = index + 1; i < messageList.length; i++) {
       if (messageList[i].messageType == 1) {
         return false;
@@ -795,7 +788,8 @@ class _ChatScreenState extends State<ChatScreen> {
       }
     } else {
       try {
-        final avatar = await ApiService().loadAvatar(selectedFriend.avatar);
+        final avatar =
+            await getIt<LoadAvatarUseCase>().execute(selectedFriend.avatar);
         if (_isMounted) {
           setState(() {
             _avatarImage = avatar;

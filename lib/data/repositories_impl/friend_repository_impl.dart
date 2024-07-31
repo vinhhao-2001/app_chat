@@ -5,7 +5,7 @@ import 'package:app_chat/data/models/friend_model.dart';
 import 'package:app_chat/domain/entities/friend_entity.dart';
 import 'package:app_chat/domain/repositories/friend_repository.dart';
 
-class FriendRepositoryImpl extends FriendRepository {
+class FriendRepositoryImpl implements FriendRepository {
   final ApiService _apiService;
   final DatabaseHelper _databaseHelper;
   final FriendDataMapper _friendDataMapper;

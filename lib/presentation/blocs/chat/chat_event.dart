@@ -18,7 +18,7 @@ final class FetchMessages extends ChatEvent {
 final class SendMessage extends ChatEvent {
   final String token;
   final String friendID;
-  final MessageModel message;
+  final MessageEntity message;
   const SendMessage(this.token, this.friendID, this.message);
   @override
   List<Object?> get props => [token, friendID, message];

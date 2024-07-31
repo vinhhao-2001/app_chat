@@ -1,15 +1,16 @@
 import 'dart:developer';
 
-import 'package:app_chat/domain/user_cases/auth_uc/logout_use_case.dart';
-import 'package:app_chat/main.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../core/constants/asset_constants.dart';
 import '../../core/theme/app_color.dart';
 import '../../core/theme/app_text.dart';
-import '../../data/data_sources/remote/api/api_service.dart';
+import '../../domain/user_cases/auth_uc/logout_use_case.dart';
+import '../../domain/user_cases/shared_uc/load_avatar_use_case.dart';
+import '../../main.dart';
 import '../blocs/user/user_bloc.dart';
 import '../blocs/friend/friend_bloc.dart';
 import 'chat_screen.dart';
@@ -152,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 return FutureBuilder<Image>(
                   future: avatarImage == null
-                      ? ApiService().loadAvatar(friend.avatar)
+                      ? getIt<LoadAvatarUseCase>().execute(friend.avatar)
                       : Future.value(avatarImage),
                   builder: (context, snapshot) {
                     Widget leadingWidget;

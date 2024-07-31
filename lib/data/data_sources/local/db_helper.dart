@@ -329,16 +329,19 @@ class DatabaseHelper {
     );
   }
 
-  Future<Uint8List> getImage(String imageUrl) async {
-    // lấy ảnh từ db ra, chỉ dùng lúc mất mạng
-    final db = await database;
-    List<Map<String, dynamic>> maps = await db.query(
-      ApiConstants.imageDataTable,
-      where: '${ApiConstants.urlImage} = ?',
-      whereArgs: [imageUrl],
-      limit: 1,
-    );
-    return maps.first[ApiConstants.imageData];
+  Future<Uint8List?> getImage(String imageUrl) async {
+    if (imageUrl.isNotEmpty) {
+      // lấy ảnh từ db ra, chỉ dùng lúc mất mạng
+      final db = await database;
+      List<Map<String, dynamic>> maps = await db.query(
+        ApiConstants.imageDataTable,
+        where: '${ApiConstants.urlImage} = ?',
+        whereArgs: [imageUrl],
+        limit: 1,
+      );
+      return maps.first[ApiConstants.imageData];
+    }
+    return null;
   }
 
   Future<void> deleteDatabase() async {

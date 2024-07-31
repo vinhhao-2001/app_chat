@@ -10,10 +10,15 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../../../core/constants/api_constants.dart';
 import '../../../../core/constants/asset_constants.dart';
+
 import '../../../../core/data_types/file_data.dart';
+
+import '../../../../domain/entities/message_entity.dart';
+
 import '../../../models/friend_model.dart';
 import '../../../models/message_model.dart';
 import '../../../models/user_model.dart';
+
 import '../../local/db_helper.dart';
 import '../../local/notification_service.dart';
 
@@ -163,7 +168,7 @@ class ApiService {
 
   // gửi tin nhắn
   Future<MessageModel?> sendMessage(
-      String token, String friendID, MessageModel message) async {
+      String token, String friendID, MessageEntity message) async {
     const String sendMessageUrl = '$baseUrl${ApiConstants.apiSendMessage}';
     var headers = {
       ApiConstants.auth: '${ApiConstants.bearer} $token',
@@ -188,7 +193,8 @@ class ApiService {
 
     try {
       // gửi lên server
-      http.StreamedResponse response = await request.send();
+      http.StreamedResponse response =
+          await request.send().timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         var responseBody = await response.stream.bytesToString();
         var jsonResponse = jsonDecode(responseBody);
@@ -239,33 +245,19 @@ class ApiService {
     }
   }
 
-  //lấy avatar
-  Future<Image> loadAvatar(String avatarUrl) async {
+  Future<Uint8List?> loadAvatar(String avatarUrl) async {
     if (avatarUrl.isNotEmpty) {
-      final DatabaseHelper dbHelper = DatabaseHelper();
-      try {
-        // lấy ảnh bằng đường dẫn
-        final String getAvatarUrl =
-            '$baseUrl${ApiConstants.apiImages}$avatarUrl';
-        final response = await http
-            .get(Uri.parse(getAvatarUrl))
-            .timeout(const Duration(seconds: 5));
-        if (response.statusCode == 200) {
-          final Uint8List imageBytes = response.bodyBytes;
-          await dbHelper.insertImage(avatarUrl, imageBytes);
-          return Image.memory(imageBytes);
-        }
-      } catch (_) {
-        // khi không lấy dc ảnh trên server thì lấy trong db
-        final Uint8List imageBytesFromDb = await dbHelper.getImage(avatarUrl);
-        if (imageBytesFromDb.isNotEmpty) {
-          return Image.memory(imageBytesFromDb);
-        } else {
-          return Image.asset(AssetConstants.iconPerson);
-        }
+      // lấy ảnh bằng đường dẫn
+      final String getAvatarUrl = '$baseUrl${ApiConstants.apiImages}$avatarUrl';
+      final response = await http
+          .get(Uri.parse(getAvatarUrl))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        final Uint8List imageBytes = response.bodyBytes;
+        return imageBytes;
       }
     }
-    return Image.asset(AssetConstants.iconPerson);
+    return null;
   }
 
   // lấy ảnh
@@ -281,10 +273,13 @@ class ApiService {
         await dbHelper.insertImage(imageUrl, imageBytes);
         return Image.memory(imageBytes);
       }
-    } on TimeoutException {
-      final Uint8List imageBytesFromDb = await dbHelper.getImage(imageUrl);
-      return Image.memory(imageBytesFromDb);
     } catch (e) {
+      if (e is TimeoutException) {
+        final Uint8List? imageBytesFromDb = await dbHelper.getImage(imageUrl);
+        if (imageBytesFromDb != null) {
+          return Image.memory(imageBytesFromDb);
+        }
+      }
       return Image.asset(AssetConstants.iconError);
     }
     return Image.asset(AssetConstants.iconError);
