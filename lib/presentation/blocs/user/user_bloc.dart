@@ -1,11 +1,7 @@
 import 'dart:async';
-
-import 'package:app_chat/domain/user_cases/auth_uc/logout_use_case.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../data/data_sources/local/db_helper.dart';
 import '../../../data/data_sources/remote/api/api_service.dart';
 
 import '../../../domain/user_cases/user_uc/get_user_use_case.dart';
