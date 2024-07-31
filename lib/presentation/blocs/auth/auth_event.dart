@@ -29,3 +29,5 @@ class RegisterButtonEvent extends AuthEvent {
   @override
   List<Object> get props => [fullName, username, password, confirmPassword];
 }
+
+class CheckUser extends AuthEvent {}

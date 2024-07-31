@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/theme/app_text.dart';
-import '../blocs/user/user_bloc.dart';
+import '../blocs/auth/auth_bloc.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    context.read<UserBloc>().add(CheckUser());
+    context.read<AuthBloc>().add(CheckUser());
 
     return Scaffold(
       body: Center(
-        child: BlocListener<UserBloc, UserState>(
+        child: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is UserAuthenticatedState) {
               Navigator.of(context).pushReplacement(

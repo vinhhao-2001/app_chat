@@ -5,4 +5,5 @@ abstract class UserRepository {
 
   Future<bool> updateUser(
       String token, String? fullName, String? avatarFilePath);
+
 }

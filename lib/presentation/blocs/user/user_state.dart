@@ -50,14 +50,3 @@ final class UserErrorState extends UserState {
   @override
   List<Object?> get props => [message];
 }
-
-final class UserAuthenticatedState extends UserState {
-  final String token;
-  const UserAuthenticatedState(this.token);
-  @override
-  List<Object?> get props => [token];
-}
-
-class UserUnauthenticatedState extends UserState {}
-
-final class UserLoggedOutState extends UserState {}

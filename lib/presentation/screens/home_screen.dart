@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:app_chat/domain/user_cases/auth_uc/logout_use_case.dart';
+import 'package:app_chat/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -353,8 +355,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _logout(BuildContext context) async {
-    final userBloc = context.read<UserBloc>();
-    userBloc.add(Logout());
+    getIt<LogoutUseCase>().execute();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const LoginScreen()),

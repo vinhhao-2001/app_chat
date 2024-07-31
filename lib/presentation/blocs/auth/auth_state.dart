@@ -22,3 +22,12 @@ class AuthFailureState extends AuthState {
 
   const AuthFailureState(this.error);
 }
+
+final class UserAuthenticatedState extends AuthState {
+  final String token;
+  const UserAuthenticatedState(this.token);
+  @override
+  List<Object> get props => [token];
+}
+
+class UserUnauthenticatedState extends AuthState {}

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_chat/domain/user_cases/auth_uc/check_user_use_case.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,6 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitialState()) {
     on<LoginButtonEvent>(_onLoginButtonEvent);
     on<RegisterButtonEvent>(_onRegisterButtonEvent);
+    on<CheckUser>(_onCheckUser);
   }
 
   Future<void> _onLoginButtonEvent(
@@ -86,6 +88,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else {
         emit(AuthFailureState(error.toString()));
       }
+    }
+  }
+
+  Future<void> _onCheckUser(CheckUser event, Emitter<AuthState> emit) async {
+    // kiểm tra thông tin người dùng trong db
+    final checkUser = getIt<CheckUserUseCase>();
+    final user = await checkUser.execute();
+    if (user != null) {
+      emit(UserAuthenticatedState(user.token));
+    } else {
+      emit(UserUnauthenticatedState());
     }
   }
 }

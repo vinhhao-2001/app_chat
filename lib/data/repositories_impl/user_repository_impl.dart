@@ -2,6 +2,7 @@ import 'package:app_chat/data/data_mapper/user_data_mapper.dart';
 import 'package:app_chat/domain/entities/user_entity.dart';
 
 import '../../domain/repositories/user_repository.dart';
+import '../data_sources/local/db_helper.dart';
 import '../data_sources/remote/api/api_service.dart';
 import '../models/user_model.dart';
 
@@ -10,7 +11,6 @@ class UserRepositoryImpl extends UserRepository {
   final UserDataMapper _userDataMapper;
 
   UserRepositoryImpl(this._apiService, this._userDataMapper);
-
 
   @override
   Future<UserEntity> getUser(String token) async {

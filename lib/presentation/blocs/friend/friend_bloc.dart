@@ -1,10 +1,13 @@
-import 'package:app_chat/data/data_sources/remote/api/api_service.dart';
-import 'package:app_chat/data/data_sources/local/data.dart';
-import 'package:app_chat/data/data_sources/local/db_helper.dart';
-import 'package:app_chat/data/models/friend_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../data/data_sources/local/data.dart';
+import '../../../data/data_sources/local/db_helper.dart';
+import '../../../domain/entities/friend_entity.dart';
+import '../../../domain/user_cases/friend_uc/get_friend_list_use_case.dart';
+import '../../../main.dart';
 
 part 'friend_event.dart';
 part 'friend_state.dart';
@@ -15,15 +18,9 @@ class FriendBloc extends Bloc<FriendEvent, FriendState> {
     on<FetchFriends>((event, emit) async {
       emit(FriendLoading());
       try {
-        // lấy danh sách bạn bè ở server.
-        friendList = await ApiService().getFriendList(event.token);
-        if (friendList.isNotEmpty) {
-          friendList.sort((a, b) =>
-              a.fullName.toLowerCase().compareTo(b.fullName.toLowerCase()));
-          friendList = await _dbHelper.updateAllFriends(friendList);
-        } else {
-          friendList = await _dbHelper.getAllFriends();
-        }
+        final getFriendList = getIt<GetFriendListUseCase>();
+        // lấy danh sách bạn bè
+        friendList = await getFriendList.execute(event.token);
         emit(FriendLoaded(friendList, friendList, avatarCache));
       } catch (e) {
         emit(FriendError(e.toString()));

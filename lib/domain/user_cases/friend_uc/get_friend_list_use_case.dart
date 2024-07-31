@@ -8,6 +8,9 @@ class GetFriendListUseCase {
   GetFriendListUseCase(this._repository);
 
   Future<List<FriendEntity>> execute(String token) async {
-    return await _repository.getFriendList(token);
+    final friendList = await _repository.getFriendList(token);
+    friendList.sort(
+        (a, b) => a.fullName.toLowerCase().compareTo(b.fullName.toLowerCase()));
+    return friendList;
   }
 }

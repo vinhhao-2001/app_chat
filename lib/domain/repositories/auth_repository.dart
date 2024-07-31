@@ -5,4 +5,7 @@ abstract class AuthRepository {
       String fullName, String username, String password);
 
   Future<UserEntity> login(String username, String password);
+
+  Future<UserEntity?> checkUser();
+
 }

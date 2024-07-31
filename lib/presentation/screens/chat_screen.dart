@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:app_chat/domain/entities/friend_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -18,7 +19,6 @@ import '../../core/theme/app_text.dart';
 import '../../data/data_sources/local/data.dart';
 import '../../data/data_sources/local/db_helper.dart';
 import '../../data/data_sources/remote/api/api_service.dart';
-import '../../data/models/friend_model.dart';
 import '../../data/models/message_model.dart';
 import '../blocs/chat/chat_bloc.dart';
 import '../blocs/friend/friend_bloc.dart';
@@ -43,7 +43,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Timer? _timer;
   Image? _avatarImage;
   bool _isMounted = false;
-  late FriendModel selectedFriend;
+  late FriendEntity selectedFriend;
   DateTime? lastTime;
   final FocusNode _focusNode = FocusNode();
 
@@ -101,8 +101,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       } else {
                         lastTime =
                             DateTime.now().subtract(const Duration(hours: 7));
-                        return const Center(
-                            child: Text(AppText.textChatEmpty));
+                        return const Center(child: Text(AppText.textChatEmpty));
                       }
                     } else if (state is ChatNewMessageAddedState) {
                       final messages = state.messages;
@@ -116,8 +115,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     } else if (state is ChatErrorState) {
                       log(state.message);
                     }
-                    return const Center(
-                        child: Text(AppText.textChatEmpty));
+                    return const Center(child: Text(AppText.textChatEmpty));
                   },
                 ),
               ),
@@ -146,7 +144,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildHeaderContent(FriendModel selectedFriend, Widget avatar) {
+  Widget _buildHeaderContent(FriendEntity selectedFriend, Widget avatar) {
     return GestureDetector(
       onTap: () => _showNicknameDialog(selectedFriend),
       child: Container(
@@ -419,9 +417,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: Text(
                   message.content,
                   style: TextStyle(
-                    color: isMe
-                        ? AppColor.chatSendColor
-                        : AppColor.chatGetColor,
+                    color:
+                        isMe ? AppColor.chatSendColor : AppColor.chatGetColor,
                   ),
                   softWrap: true,
                 ),
@@ -616,7 +613,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void _showNicknameDialog(FriendModel selectedFriend) {
+  void _showNicknameDialog(FriendEntity selectedFriend) {
     final controller = TextEditingController();
 
     showDialog(

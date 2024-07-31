@@ -11,8 +11,8 @@ final class FriendInitial extends FriendState {}
 final class FriendLoading extends FriendState {}
 
 final class FriendLoaded extends FriendState {
-  final List<FriendModel> fullFriends;
-  final List<FriendModel> filteredFriends;
+  final List<FriendEntity> fullFriends;
+  final List<FriendEntity> filteredFriends;
   final Map<String, Image> avatarCache;
 
   const FriendLoaded(this.fullFriends, this.filteredFriends, this.avatarCache);

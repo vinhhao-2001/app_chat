@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../core/theme/app_color.dart';
 import '../../core/theme/app_text.dart';
+
 import '../blocs/auth/auth_bloc.dart';
+
 import '../widgets/widget.dart';
+
 import 'home_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -117,8 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 PasswordInputWidget(
                                     textEditingController:
                                         _confirmPasswordController,
-                                    hintText:
-                                        AppText.hintTextConfirmPassword),
+                                    hintText: AppText.hintTextConfirmPassword),
                                 const SizedBox(height: 20),
                                 ElevatedButton(
                                   onPressed: () {

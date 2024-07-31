@@ -18,12 +18,9 @@ class UpdateUserInfo extends UserEvent {
   final String token;
   final String? newName;
   final String? newAvatarPath;
+
   const UpdateUserInfo(this.token, this.newName, this.newAvatarPath);
 
   @override
   List<Object?> get props => [token, newName];
 }
-
-class CheckUser extends UserEvent {}
-
-class Logout extends UserEvent {}

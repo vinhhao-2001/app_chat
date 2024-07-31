@@ -1,7 +1,6 @@
+import 'package:app_chat/domain/entities/friend_entity.dart';
 import 'package:flutter/material.dart';
 
-import '../../models/friend_model.dart';
-
-List<FriendModel> friendList = [];
+List<FriendEntity> friendList = [];
 
 Map<String, Image> avatarCache = {};

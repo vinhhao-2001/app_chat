@@ -19,6 +19,7 @@ import '../../local/notification_service.dart';
 
 class ApiService {
   static const String baseUrl = 'http://10.2.83.139:8888/api/';
+
   static const String get = 'GET';
   static const String post = 'POST';
   // đăng kí tài khoản
