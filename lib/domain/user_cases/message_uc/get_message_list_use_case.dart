@@ -10,11 +10,7 @@ class GetMessageListUseCase {
   //   return await _repository.getMessageList(token, friendID);
   // }
 
-
   Stream<List<MessageEntity>> execute(String token, String friendID) async* {
     yield* _repository.getMessageList(token, friendID);
   }
-
-
-
 }

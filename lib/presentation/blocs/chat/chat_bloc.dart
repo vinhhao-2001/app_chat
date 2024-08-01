@@ -27,6 +27,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       await for (var messageList
           in getMessage.execute(event.token, event.friendID)) {
         _messageList = messageList;
+        emit(ChatInitialState());
         emit(ChatLoadedState(_messageList));
       }
     } else {

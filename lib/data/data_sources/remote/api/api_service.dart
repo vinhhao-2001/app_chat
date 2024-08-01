@@ -161,10 +161,8 @@ class ApiService {
           .toList();
       return friendList;
     } on TimeoutException {
-      print('error');
       return [];
     } catch (e) {
-      print('error: $e');
       return [];
     }
   }
