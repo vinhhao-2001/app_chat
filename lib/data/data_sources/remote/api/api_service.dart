@@ -24,6 +24,7 @@ import '../../local/notification_service.dart';
 
 class ApiService {
   static const String baseUrl = 'http://10.2.83.139:8888/api/';
+  //static const String baseUrl = 'http://10.2.134.78:8888/api/';
 
   static const String get = 'GET';
   static const String post = 'POST';
@@ -151,7 +152,7 @@ class ApiService {
         headers: <String, String>{
           ApiConstants.auth: '${ApiConstants.bearer} $token',
         },
-      ).timeout(const Duration(seconds: 2));
+      ).timeout(const Duration(seconds: 5));
       // thông tin trả về
       final List<dynamic> data = jsonDecode(response.body)[ApiConstants.data];
       List<FriendModel> friendList = data
@@ -160,9 +161,11 @@ class ApiService {
           .toList();
       return friendList;
     } on TimeoutException {
+      print('error');
       return [];
     } catch (e) {
-      throw Exception(e);
+      print('error: $e');
+      return [];
     }
   }
 
@@ -248,13 +251,18 @@ class ApiService {
   Future<Uint8List?> loadAvatar(String avatarUrl) async {
     if (avatarUrl.isNotEmpty) {
       // lấy ảnh bằng đường dẫn
-      final String getAvatarUrl = '$baseUrl${ApiConstants.apiImages}$avatarUrl';
-      final response = await http
-          .get(Uri.parse(getAvatarUrl))
-          .timeout(const Duration(seconds: 5));
-      if (response.statusCode == 200) {
-        final Uint8List imageBytes = response.bodyBytes;
-        return imageBytes;
+      try {
+        final String getAvatarUrl =
+            '$baseUrl${ApiConstants.apiImages}$avatarUrl';
+        final response = await http
+            .get(Uri.parse(getAvatarUrl))
+            .timeout(const Duration(seconds: 5));
+        if (response.statusCode == 200) {
+          final Uint8List imageBytes = response.bodyBytes;
+          return imageBytes;
+        }
+      } catch (e) {
+        return null;
       }
     }
     return null;

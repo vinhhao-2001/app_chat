@@ -12,34 +12,74 @@ class MessageRepositoryImpl extends MessageRepository {
   MessageRepositoryImpl(
       this._apiService, this._databaseHelper, this._messageDataMapper);
 
+  // @override
+  // Future<List<MessageEntity>> getMessageList(String token, String friendID) async {
+  //   // lấy tin nhắn trong db khi mới vào chat screen
+  //   List<MessageModel> messageList = [];
+  //   final messageDB = await _databaseHelper.getMessages(friendID);
+  //   if (messageDB.isNotEmpty) {
+  //     messageList.addAll(messageDB);
+  //     // lấy tin nhắn mới ở server
+  //     final messageServer = await _apiService.getMessageList(token, friendID,
+  //         lastTime: messageDB.last.createdAt);
+  //     if (messageServer.isNotEmpty) {
+  //       messageList.addAll(messageServer);
+  //       // lưu tin nhắn mới vào db
+  //       await _databaseHelper.insertMessages(friendID, messageServer);
+  //     }
+  //     return messageList.map(_messageDataMapper.mapToMessageEntity).toList();
+  //   } else {
+  //     // db rỗng thì lấy toàn bộ tin nhắn trên server
+  //     final messageServer = await _apiService.getMessageList(token, friendID);
+  //     if (messageServer.isNotEmpty) {
+  //       // thực hiện khi có tin nhắn trên server
+  //       messageList.addAll(messageServer);
+  //       // Lưu tin nhắn vào db
+  //       await _databaseHelper.insertMessages(friendID, messageServer);
+  //       return messageList.map(_messageDataMapper.mapToMessageEntity).toList();
+  //     }
+  //     return [];
+  //   }
+  // }
+
   @override
-  Future<List<MessageEntity>> getMessageList(
-      String token, String friendID) async {
-    // lấy tin nhắn trong db khi mới vào chat screen
+  Stream<List<MessageEntity>> getMessageList(
+      String token, String friendID) async* {
+    // Lấy tin nhắn trong db khi mới vào chat screen
     List<MessageModel> messageList = [];
     final messageDB = await _databaseHelper.getMessages(friendID);
+
     if (messageDB.isNotEmpty) {
       messageList.addAll(messageDB);
-      // lấy tin nhắn mới ở server
+      // Trả về danh sách tin nhắn từ DB
+      yield messageList.map(_messageDataMapper.mapToMessageEntity).toList();
+
+      // Lấy tin nhắn mới ở server
       final messageServer = await _apiService.getMessageList(token, friendID,
           lastTime: messageDB.last.createdAt);
       if (messageServer.isNotEmpty) {
         messageList.addAll(messageServer);
-        // lưu tin nhắn mới vào db
+        // Lưu tin nhắn mới vào db
         await _databaseHelper.insertMessages(friendID, messageServer);
+
+        // Trả về danh sách tin nhắn mới từ server
+        yield messageList.map(_messageDataMapper.mapToMessageEntity).toList();
       }
-      return messageList.map(_messageDataMapper.mapToMessageEntity).toList();
     } else {
-      // db rỗng thì lấy toàn bộ tin nhắn trên server
+      // DB rỗng thì lấy toàn bộ tin nhắn trên server
       final messageServer = await _apiService.getMessageList(token, friendID);
       if (messageServer.isNotEmpty) {
-        // thực hiện khi có tin nhắn trên server
+        // Thực hiện khi có tin nhắn trên server
         messageList.addAll(messageServer);
         // Lưu tin nhắn vào db
         await _databaseHelper.insertMessages(friendID, messageServer);
-        return messageList.map(_messageDataMapper.mapToMessageEntity).toList();
+
+        // Trả về danh sách tin nhắn từ server
+        yield messageList.map(_messageDataMapper.mapToMessageEntity).toList();
+      } else {
+        // Trả về danh sách rỗng nếu không có tin nhắn trên server
+        yield [];
       }
-      return [];
     }
   }
 

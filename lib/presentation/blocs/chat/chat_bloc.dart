@@ -23,14 +23,19 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       _messageList = [];
       emit(ChatLoadingState());
       final getMessage = getIt<GetMessageListUseCase>();
-      _messageList = await getMessage.execute(event.token, event.friendID);
-      emit(ChatLoadedState(_messageList));
+
+      await for (var messageList
+          in getMessage.execute(event.token, event.friendID)) {
+        _messageList = messageList;
+        emit(ChatLoadedState(_messageList));
+      }
     } else {
       // lấy tin nhắn định kì
       final reloadMessage = getIt<ReloadMessageUseCase>();
       final messageNew = await reloadMessage.execute(
           event.token, event.friendID, event.lastTime!);
       _messageList.addAll(messageNew);
+      emit(ChatInitialState());
       emit(ChatLoadedState(_messageList));
     }
   }

@@ -102,7 +102,8 @@ void setupLocator() {
   getIt.registerLazySingleton<CheckUserUseCase>(
       () => CheckUserUseCase(getIt<AuthRepositoryImpl>()));
 
-  getIt.registerLazySingleton<LogoutUseCase>(() => LogoutUseCase());
+  getIt.registerLazySingleton<LogoutUseCase>(
+      () => LogoutUseCase(getIt<DatabaseHelper>()));
 
   getIt.registerLazySingleton<GetUserUseCase>(
       () => GetUserUseCase(getIt<UserRepositoryImpl>()));

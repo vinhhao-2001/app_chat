@@ -6,7 +6,15 @@ class GetMessageListUseCase {
 
   GetMessageListUseCase(this._repository);
 
-  Future<List<MessageEntity>> execute(String token, String friendID) async {
-    return await _repository.getMessageList(token, friendID);
+  // Future<List<MessageEntity>> execute(String token, String friendID) async {
+  //   return await _repository.getMessageList(token, friendID);
+  // }
+
+
+  Stream<List<MessageEntity>> execute(String token, String friendID) async* {
+    yield* _repository.getMessageList(token, friendID);
   }
+
+
+
 }
