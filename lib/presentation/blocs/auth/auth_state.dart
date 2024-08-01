@@ -23,6 +23,7 @@ class AuthFailureState extends AuthState {
   const AuthFailureState(this.error);
 }
 
+// sử dụng trong splash screen
 final class UserAuthenticatedState extends AuthState {
   final String token;
   const UserAuthenticatedState(this.token);

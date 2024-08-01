@@ -1,18 +1,21 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../core/constants/asset_constants.dart';
+
 import '../../core/theme/app_color.dart';
 import '../../core/theme/app_text.dart';
+
 import '../../domain/user_cases/auth_uc/logout_use_case.dart';
 import '../../domain/user_cases/shared_uc/load_avatar_use_case.dart';
+
 import '../../main.dart';
+
 import '../blocs/user/user_bloc.dart';
 import '../blocs/friend/friend_bloc.dart';
+
 import 'chat_screen.dart';
 import 'login_screen.dart';
 
@@ -90,7 +93,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             } else if (state is UserErrorState) {
-              log(state.message);
               return GestureDetector(
                 onTap: () => openPopupMenu(context),
                 child: const CircleAvatar(
@@ -246,7 +248,6 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             );
           } else if (state is FriendError) {
-            log(state.message);
             return Container();
           } else {
             return Container();
