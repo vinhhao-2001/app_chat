@@ -7,7 +7,6 @@ part 'picker_state.dart';
 class PickerBloc extends Bloc<PickerEvent, PickerState> {
   PickerBloc() : super(PickerInitial()) {
     on<PickerEvent>((event, emit) {
-      // TODO: implement event handler
     });
   }
 }
