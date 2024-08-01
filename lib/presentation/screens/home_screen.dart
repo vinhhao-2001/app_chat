@@ -16,7 +16,8 @@ import '../../main.dart';
 import '../blocs/user/user_bloc.dart';
 import '../blocs/friend/friend_bloc.dart';
 
-import 'chat_screen.dart';
+import '../widgets/loading_widget.dart';
+import 'chat/chat_screen.dart';
 import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -139,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: BlocBuilder<FriendBloc, FriendState>(
         builder: (context, state) {
           if (state is FriendLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: LoadingWidget());
           } else if (state is FriendLoaded) {
             return ListView.builder(
               itemCount: state.filteredFriends.length,
@@ -158,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         avatarImage == null) {
                       leadingWidget = const CircleAvatar(
                         radius: 25,
-                        child: CircularProgressIndicator(),
+                        child: LoadingWidget(),
                       );
                     } else if (snapshot.hasError) {
                       leadingWidget = const CircleAvatar(
