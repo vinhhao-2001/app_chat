@@ -1,6 +1,8 @@
 import 'package:app_chat/data/models/message_model.dart';
 import 'package:app_chat/domain/entities/message_entity.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class MessageDataMapper {
   MessageEntity mapToMessageEntity(MessageModel message) {
     return MessageEntity(

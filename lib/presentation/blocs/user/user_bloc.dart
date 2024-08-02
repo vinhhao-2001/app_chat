@@ -4,11 +4,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/utils/di.dart';
 import '../../../domain/user_cases/shared_uc/load_avatar_use_case.dart';
 import '../../../domain/user_cases/user_uc/get_user_use_case.dart';
 import '../../../domain/user_cases/user_uc/update_user_use_case.dart';
 
-import '../../../main.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';

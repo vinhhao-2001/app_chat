@@ -1,6 +1,9 @@
 import 'package:app_chat/domain/entities/message_entity.dart';
 import 'package:app_chat/domain/repositories/message_repository.dart';
+import 'package:injectable/injectable.dart';
 
+
+@injectable
 class SendMessageUseCase {
   final MessageRepository _repository;
 

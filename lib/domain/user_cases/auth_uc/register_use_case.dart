@@ -1,6 +1,9 @@
+import 'package:injectable/injectable.dart';
+
 import '../../entities/user_entity.dart';
 import '../../repositories/auth_repository.dart';
 
+@injectable
 class RegisterUseCase {
   final AuthRepository _repository;
 

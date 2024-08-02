@@ -8,10 +8,9 @@ import '../../core/constants/asset_constants.dart';
 import '../../core/theme/app_color.dart';
 import '../../core/theme/app_text.dart';
 
+import '../../core/utils/di.dart';
 import '../../domain/user_cases/auth_uc/logout_use_case.dart';
 import '../../domain/user_cases/shared_uc/load_avatar_use_case.dart';
-
-import '../../main.dart';
 
 import '../blocs/user/user_bloc.dart';
 import '../blocs/friend/friend_bloc.dart';
@@ -210,8 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? Text(
                               friend.content,
                               style: const TextStyle(
-                                  color: AppColor.contentColor,
-                                  fontStyle: FontStyle.italic),
+                                  color: AppColor.contentColor),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             )

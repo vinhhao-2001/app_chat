@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../core/constants/api_constants.dart';
@@ -19,6 +21,7 @@ import '../../../models/user_model.dart';
 import '../../local/db_helper.dart';
 import '../../../../core/utils/notification_service.dart';
 
+@LazySingleton()
 class ApiService {
   // static const String baseUrl = 'http://10.2.83.139:8888/api/';
   //static const String baseUrl = 'http://10.2.134.78:8888/api/';
@@ -240,7 +243,7 @@ class ApiService {
     } on TimeoutException {
       return [];
     } catch (e) {
-      print(e);
+      log(e.toString());
       return [];
     }
   }

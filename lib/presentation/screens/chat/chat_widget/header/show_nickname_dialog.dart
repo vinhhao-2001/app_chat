@@ -27,8 +27,8 @@ class ShowNicknameDialog extends StatelessWidget {
           onPressed: () async {
             if (controller.text.isNotEmpty) {
               selectedFriend.nickname = controller.text;
-              await DatabaseHelper()
-                  .insertNickname(selectedFriend.friendID, controller.text);
+              await getIt<AddNicknameUseCase>()
+                  .execute(selectedFriend.friendID, controller.text);
               if (!context.mounted) return;
               Navigator.of(context).pop();
             } else {

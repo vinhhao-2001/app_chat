@@ -39,6 +39,7 @@ class FriendModel {
       images: json[ApiConstants.images] ?? [],
       isSend: json[ApiConstants.isSend] ?? 0,
       isOnline: json[ApiConstants.isOnline] ?? false,
+      nickname: json[ApiConstants.nickname],
     );
   }
 

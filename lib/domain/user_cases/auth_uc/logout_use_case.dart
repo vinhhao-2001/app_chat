@@ -1,5 +1,8 @@
+import 'package:injectable/injectable.dart';
+
 import '../../../data/data_sources/local/db_helper.dart';
 
+@injectable
 class LogoutUseCase {
   final DatabaseHelper _databaseHelper;
 

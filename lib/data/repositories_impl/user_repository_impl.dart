@@ -1,10 +1,12 @@
 import 'package:app_chat/data/data_mapper/user_data_mapper.dart';
 import 'package:app_chat/domain/entities/user_entity.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../domain/repositories/user_repository.dart';
 import '../data_sources/remote/api/api_service.dart';
 import '../models/user_model.dart';
 
+@LazySingleton(as: UserRepository)
 class UserRepositoryImpl extends UserRepository {
   final ApiService _apiService;
   final UserDataMapper _userDataMapper;

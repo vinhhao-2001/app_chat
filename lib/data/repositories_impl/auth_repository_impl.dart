@@ -1,3 +1,5 @@
+import 'package:injectable/injectable.dart';
+
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../data_mapper/user_data_mapper.dart';
@@ -5,6 +7,7 @@ import '../data_sources/local/db_helper.dart';
 import '../data_sources/remote/api/api_service.dart';
 import '../models/user_model.dart';
 
+@LazySingleton(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
   final ApiService _apiService;
   final UserDataMapper _userDataMapper;

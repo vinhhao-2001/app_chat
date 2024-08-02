@@ -1,5 +1,8 @@
+import 'package:injectable/injectable.dart';
+
 import '../../repositories/user_repository.dart';
 
+@injectable
 class UpdateUserUseCase {
   final UserRepository _repository;
 

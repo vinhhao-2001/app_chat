@@ -4,10 +4,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/theme/app_text.dart';
+import '../../../core/utils/di.dart';
 import '../../../domain/user_cases/auth_uc/check_user_use_case.dart';
 import '../../../domain/user_cases/auth_uc/login_use_case.dart';
 import '../../../domain/user_cases/auth_uc/register_use_case.dart';
-import '../../../main.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';

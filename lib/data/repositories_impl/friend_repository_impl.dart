@@ -4,7 +4,9 @@ import 'package:app_chat/data/data_sources/remote/api/api_service.dart';
 import 'package:app_chat/data/models/friend_model.dart';
 import 'package:app_chat/domain/entities/friend_entity.dart';
 import 'package:app_chat/domain/repositories/friend_repository.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: FriendRepository)
 class FriendRepositoryImpl implements FriendRepository {
   final ApiService _apiService;
   final DatabaseHelper _databaseHelper;

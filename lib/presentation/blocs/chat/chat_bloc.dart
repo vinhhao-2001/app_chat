@@ -1,10 +1,12 @@
-import 'package:app_chat/domain/entities/message_entity.dart';
-import 'package:app_chat/domain/user_cases/message_uc/get_message_list_use_case.dart';
-import 'package:app_chat/domain/user_cases/message_uc/reload_message_use_case.dart';
-import 'package:app_chat/domain/user_cases/message_uc/send_message_use_case.dart';
-import 'package:app_chat/main.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../core/utils/di.dart';
+import '../../../domain/entities/message_entity.dart';
+import '../../../domain/user_cases/message_uc/get_message_list_use_case.dart';
+import '../../../domain/user_cases/message_uc/reload_message_use_case.dart';
+import '../../../domain/user_cases/message_uc/send_message_use_case.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';

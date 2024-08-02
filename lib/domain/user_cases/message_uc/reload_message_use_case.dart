@@ -1,6 +1,9 @@
+import 'package:injectable/injectable.dart';
+
 import '../../entities/message_entity.dart';
 import '../../repositories/message_repository.dart';
 
+@injectable
 class ReloadMessageUseCase {
   final MessageRepository _repository;
 

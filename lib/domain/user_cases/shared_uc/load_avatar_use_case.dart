@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../core/constants/asset_constants.dart';
 import '../../../data/data_sources/local/db_helper.dart';
 import '../../../data/data_sources/remote/api/api_service.dart';
 
+@injectable
 class LoadAvatarUseCase {
   final ApiService _apiService;
   final DatabaseHelper _databaseHelper;

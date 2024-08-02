@@ -11,13 +11,13 @@ import '../../../core/data_types/file_data.dart';
 import '../../../core/theme/app_color.dart';
 import '../../../core/theme/app_text.dart';
 
+import '../../../core/utils/di.dart';
 import '../../../core/utils/utils.dart';
 
 import '../../../domain/entities/friend_entity.dart';
 import '../../../domain/entities/message_entity.dart';
 import '../../../domain/user_cases/shared_uc/load_avatar_use_case.dart';
 
-import '../../../main.dart';
 
 import '../../blocs/chat/chat_bloc.dart';
 import '../../blocs/picker/picker_bloc.dart';
