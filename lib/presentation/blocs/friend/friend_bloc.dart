@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/data_sources/local/data.dart';
+import '../../../core/utils/utils.dart';
 
 import '../../../data/data_sources/local/db_helper.dart';
 import '../../../domain/entities/friend_entity.dart';

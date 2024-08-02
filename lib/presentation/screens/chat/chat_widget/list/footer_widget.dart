@@ -20,7 +20,7 @@ class FooterWidget extends StatelessWidget {
             right: isMe ? (MediaQuery.of(context).size.width * 0.05) : 0,
           ),
           child: Text(
-            ApiService().formatMessageTime(messageEntity.createdAt),
+            formatMessageTime(messageEntity.createdAt),
             style: const TextStyle(color: AppColor.textTime),
           ),
         ),

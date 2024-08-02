@@ -26,7 +26,7 @@ class ImagesWidget extends StatelessWidget {
                   isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: messageEntity.images.map((imageData) {
                 return FutureBuilder<Image>(
-                  future: ApiService().loadImage(imageData.urlImage),
+                  future: getIt<LoadImageUseCase>().execute(imageData.urlImage),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container(

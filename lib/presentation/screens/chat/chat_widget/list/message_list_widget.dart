@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/theme/app_color.dart';
-import '../../../../../data/data_sources/remote/api/api_service.dart';
+
+import '../../../../../core/utils/utils.dart';
 import '../../../../../domain/entities/message_entity.dart';
+import '../../../../../domain/user_cases/shared_uc/download_file_use_case.dart';
+import '../../../../../domain/user_cases/shared_uc/load_image_use_case.dart';
+import '../../../../../main.dart';
 import '../avatar_widget.dart';
 
 part 'content_widget.dart';

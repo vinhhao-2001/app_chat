@@ -1,10 +1,5 @@
 import 'dart:async';
 
-import 'package:app_chat/presentation/screens/chat/chat_widget/avatar_widget.dart';
-import 'package:app_chat/presentation/screens/chat/chat_widget/header/header_widget.dart';
-import 'package:app_chat/presentation/screens/chat/chat_widget/list/message_list_widget.dart';
-import 'package:app_chat/presentation/screens/chat/chat_widget/send/emoji_picker_widget.dart';
-import 'package:app_chat/presentation/screens/chat/chat_widget/send/image_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
@@ -16,7 +11,7 @@ import '../../../core/data_types/file_data.dart';
 import '../../../core/theme/app_color.dart';
 import '../../../core/theme/app_text.dart';
 
-import '../../../data/data_sources/local/data.dart';
+import '../../../core/utils/utils.dart';
 
 import '../../../domain/entities/friend_entity.dart';
 import '../../../domain/entities/message_entity.dart';
@@ -25,9 +20,14 @@ import '../../../domain/user_cases/shared_uc/load_avatar_use_case.dart';
 import '../../../main.dart';
 
 import '../../blocs/chat/chat_bloc.dart';
-
 import '../../blocs/picker/picker_bloc.dart';
+
 import '../../widgets/widget.dart';
+import 'chat_widget/avatar_widget.dart';
+import 'chat_widget/header/header_widget.dart';
+import 'chat_widget/list/message_list_widget.dart';
+import 'chat_widget/send/emoji_picker_widget.dart';
+import 'chat_widget/send/image_picker_widget.dart';
 
 class ChatScreen extends StatefulWidget {
   final String friendID;

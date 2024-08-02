@@ -6,9 +6,13 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/data_types/image_data.dart';
+
 import '../../../../../core/theme/app_text.dart';
+
 import '../../../../../domain/entities/message_entity.dart';
+
 import '../../../../blocs/chat/chat_bloc.dart';
+
 import '../../../../widgets/loading_widget.dart';
 
 class ImagePickerWidget extends StatefulWidget {

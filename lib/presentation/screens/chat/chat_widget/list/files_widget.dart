@@ -46,7 +46,7 @@ class FilesWidget extends StatelessWidget {
                         IconButton(
                           icon: const Icon(Icons.file_download,
                               color: Colors.grey),
-                          onPressed: () => ApiService().downloadFile(fileData),
+                          onPressed: () => getIt<DownloadFileUseCase>().execute(fileData),
                         ),
                         const SizedBox(width: 5),
                         Expanded(

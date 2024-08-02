@@ -1,4 +1,3 @@
-import 'package:app_chat/presentation/blocs/picker/picker_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -24,11 +23,14 @@ import 'domain/user_cases/friend_uc/get_friend_list_use_case.dart';
 import 'domain/user_cases/message_uc/get_message_list_use_case.dart';
 import 'domain/user_cases/message_uc/reload_message_use_case.dart';
 import 'domain/user_cases/message_uc/send_message_use_case.dart';
+import 'domain/user_cases/shared_uc/download_file_use_case.dart';
 import 'domain/user_cases/shared_uc/load_avatar_use_case.dart';
+import 'domain/user_cases/shared_uc/load_image_use_case.dart';
 import 'domain/user_cases/user_uc/get_user_use_case.dart';
 import 'domain/user_cases/user_uc/update_user_use_case.dart';
 
 import 'presentation/blocs/auth/auth_bloc.dart';
+import 'presentation/blocs/picker/picker_bloc.dart';
 import 'presentation/blocs/user/user_bloc.dart';
 import 'presentation/blocs/chat/chat_bloc.dart';
 import 'presentation/blocs/friend/friend_bloc.dart';
@@ -68,7 +70,6 @@ void main() {
 void setupLocator() {
   // api server
   getIt.registerLazySingleton<ApiService>(() => ApiService());
-
   getIt.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
 
   // mapper
@@ -130,4 +131,10 @@ void setupLocator() {
   // shared
   getIt.registerLazySingleton<LoadAvatarUseCase>(
       () => LoadAvatarUseCase(getIt<ApiService>(), getIt<DatabaseHelper>()));
+
+  getIt.registerLazySingleton<LoadImageUseCase>(
+      () => LoadImageUseCase(getIt<ApiService>(), getIt<DatabaseHelper>()));
+
+  getIt.registerLazySingleton<DownloadFileUseCase>(
+      () => DownloadFileUseCase(getIt<ApiService>()));
 }

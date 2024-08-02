@@ -3,13 +3,10 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../core/constants/api_constants.dart';
-import '../../../../core/constants/asset_constants.dart';
 
 import '../../../../core/data_types/file_data.dart';
 
@@ -20,11 +17,13 @@ import '../../../models/message_model.dart';
 import '../../../models/user_model.dart';
 
 import '../../local/db_helper.dart';
-import '../../local/notification_service.dart';
+import '../../../../core/utils/notification_service.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://10.2.83.139:8888/api/';
+  // static const String baseUrl = 'http://10.2.83.139:8888/api/';
   //static const String baseUrl = 'http://10.2.134.78:8888/api/';
+
+  static const String baseUrl = 'http://10.2.83.134:8888/api/';
 
   static const String get = 'GET';
   static const String post = 'POST';
@@ -239,56 +238,46 @@ class ApiService {
         throw Exception(jsonData[ApiConstants.message]);
       }
     } on TimeoutException {
-      List<MessageModel> messageList = [];
-      return messageList;
+      return [];
     } catch (e) {
-      throw Exception(e);
+      print(e);
+      return [];
     }
   }
 
   Future<Uint8List?> loadAvatar(String avatarUrl) async {
-    if (avatarUrl.isNotEmpty) {
-      // lấy ảnh bằng đường dẫn
-      try {
-        final String getAvatarUrl =
-            '$baseUrl${ApiConstants.apiImages}$avatarUrl';
-        final response = await http
-            .get(Uri.parse(getAvatarUrl))
-            .timeout(const Duration(seconds: 5));
-        if (response.statusCode == 200) {
-          final Uint8List imageBytes = response.bodyBytes;
-          return imageBytes;
-        }
-      } catch (e) {
-        return null;
+    // lấy ảnh bằng đường dẫn
+    try {
+      final String getAvatarUrl = '$baseUrl${ApiConstants.apiImages}$avatarUrl';
+      final response = await http
+          .get(Uri.parse(getAvatarUrl))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        final Uint8List imageBytes = response.bodyBytes;
+        return imageBytes;
       }
+    } catch (e) {
+      return null;
     }
     return null;
   }
 
   // lấy ảnh
-  Future<Image> loadImage(String imageUrl) async {
-    final DatabaseHelper dbHelper = DatabaseHelper();
+  Future<Uint8List?> loadImage(String imageUrl) async {
     try {
-      final String getImageUrl = '$baseUrl$imageUrl';
+      final String getAvatarUrl = '$baseUrl$imageUrl';
       final response = await http
-          .get(Uri.parse(getImageUrl))
+          .get(Uri.parse(getAvatarUrl))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final Uint8List imageBytes = response.bodyBytes;
-        await dbHelper.insertImage(imageUrl, imageBytes);
-        return Image.memory(imageBytes);
+        return imageBytes;
+      } else {
+        return null;
       }
     } catch (e) {
-      if (e is TimeoutException) {
-        final Uint8List? imageBytesFromDb = await dbHelper.getImage(imageUrl);
-        if (imageBytesFromDb != null) {
-          return Image.memory(imageBytesFromDb);
-        }
-      }
-      return Image.asset(AssetConstants.iconError);
+      return null;
     }
-    return Image.asset(AssetConstants.iconError);
   }
 
   // tải file
@@ -361,26 +350,5 @@ class ApiService {
     } while (file.existsSync());
 
     return newFileName;
-  }
-
-  // định dạng thời gian
-  String formatMessageTime(DateTime timestamp) {
-    final DateFormat formatter = DateFormat(ApiConstants.dateFormat);
-    final String formattedTime = formatter.format(timestamp);
-
-    final DateTime now = DateTime.now();
-    final DateTime yesterday = DateTime(now.year, now.month, now.day - 1);
-
-    if (timestamp.year == now.year &&
-        timestamp.month == now.month &&
-        timestamp.day == now.day) {
-      return formattedTime;
-    } else if (timestamp.year == yesterday.year &&
-        timestamp.month == yesterday.month &&
-        timestamp.day == yesterday.day) {
-      return '$formattedTime ${ApiConstants.yesterday}';
-    } else {
-      return '${formatter.format(timestamp)} ${timestamp.day}/${timestamp.month}/${timestamp.year}';
-    }
   }
 }
