@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
         BlocBuilder<UserBloc, UserState>(
           builder: (context, state) {
             if (state is UserLoadingState) {
-              return const CircularProgressIndicator();
+              return const LoadingWidget();
             } else if (state is UserLoadedState) {
               return GestureDetector(
                 onTap: () => openPopupMenu(context),

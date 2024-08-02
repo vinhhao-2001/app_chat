@@ -26,6 +26,7 @@ import '../../../main.dart';
 
 import '../../blocs/chat/chat_bloc.dart';
 
+import '../../blocs/picker/picker_bloc.dart';
 import '../../widgets/widget.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -41,8 +42,6 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _editTextSendMessage = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  bool _emojiOpen = false;
-  bool _imagePickerOpen = false;
   Timer? _timer;
   Image? _avatarImage;
   bool _isMounted = false;
@@ -63,74 +62,74 @@ class _ChatScreenState extends State<ChatScreen> {
     _loadAvatar();
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        setState(() {
-          _emojiOpen = false;
-          _imagePickerOpen = false;
-        });
+        BlocProvider.of<PickerBloc>(context).add(ClosePickers());
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        _focusNode.unfocus();
-        _emojiOpen = false;
-        _imagePickerOpen = false;
-        setState(() {});
-      },
-      child: Scaffold(
-        body: SafeArea(
-          child: Column(
-            children: [
-              HeaderWidget(
-                selectedFriend: selectedFriend,
-                avatarImage: _avatarImage,
-              ),
-              Expanded(
-                child: BlocBuilder<ChatBloc, ChatState>(
-                  builder: (context, state) {
-                    if (state is ChatLoadingState) {
-                      return const Center(child: LoadingWidget(size: 60));
-                    } else if (state is ChatLoadedState) {
-                      final messages = state.messages;
-                      if (messages.isNotEmpty) {
-                        lastTime = messages.last.createdAt;
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          _scrollToBottom();
-                        });
-                        return MessageListWidget(
-                          messageList: messages,
-                          scrollController: _scrollController,
-                          avatarWidget: AvatarWidget(
-                            image: _avatarImage,
-                            size: 15,
-                            isOnline: selectedFriend.isOnline,
-                          ),
-                        );
-                      } else {
-                        lastTime =
-                            DateTime.now().subtract(const Duration(hours: 7));
+    return BlocBuilder<PickerBloc, PickerState>(
+      builder: (context, state) {
+        return GestureDetector(
+          onTap: () {
+            _focusNode.unfocus();
+            BlocProvider.of<PickerBloc>(context).add(ClosePickers());
+          },
+          child: Scaffold(
+            body: SafeArea(
+              child: Column(
+                children: [
+                  HeaderWidget(
+                    selectedFriend: selectedFriend,
+                    avatarImage: _avatarImage,
+                  ),
+                  Expanded(
+                    child: BlocBuilder<ChatBloc, ChatState>(
+                      builder: (context, state) {
+                        if (state is ChatLoadingState) {
+                          return const Center(child: LoadingWidget(size: 60));
+                        } else if (state is ChatLoadedState) {
+                          final messages = state.messages;
+                          if (messages.isNotEmpty) {
+                            lastTime = messages.last.createdAt;
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _scrollToBottom();
+                            });
+                            return MessageListWidget(
+                              messageList: messages,
+                              scrollController: _scrollController,
+                              avatarWidget: AvatarWidget(
+                                image: _avatarImage,
+                                size: 15,
+                                isOnline: selectedFriend.isOnline,
+                              ),
+                            );
+                          } else {
+                            lastTime = DateTime.now()
+                                .subtract(const Duration(hours: 7));
+                            return const Center(
+                                child: Text(AppText.textChatEmpty));
+                          }
+                        } else if (state is ChatErrorState) {
+                          // log(state.message);
+                        }
                         return const Center(child: Text(AppText.textChatEmpty));
-                      }
-                    } else if (state is ChatErrorState) {
-                      // log(state.message);
-                    }
-                    return const Center(child: Text(AppText.textChatEmpty));
-                  },
-                ),
+                      },
+                    ),
+                  ),
+                  _buildSendMessage(),
+                  if (state.isEmojiOpen)
+                    EmojiPickerWidget(controller: _editTextSendMessage),
+                  if (state.isImagePickerOpen)
+                    ImagePickerWidget(
+                        token: widget.token, friendID: widget.friendID),
+                ],
               ),
-              _buildSendMessage(),
-              if (_emojiOpen)
-                EmojiPickerWidget(controller: _editTextSendMessage),
-              if (_imagePickerOpen)
-                ImagePickerWidget(
-                    token: widget.token, friendID: widget.friendID),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -146,10 +145,7 @@ class _ChatScreenState extends State<ChatScreen> {
             icon: const Icon(Icons.emoji_emotions_outlined),
             onPressed: () {
               _focusNode.unfocus();
-              setState(() {
-                _emojiOpen = !_emojiOpen;
-                _imagePickerOpen = false;
-              });
+              BlocProvider.of<PickerBloc>(context).add(ToggleEmojiPicker());
             },
           ),
           Expanded(
@@ -189,10 +185,7 @@ class _ChatScreenState extends State<ChatScreen> {
             icon: const Icon(Icons.image),
             onPressed: () {
               _focusNode.unfocus();
-              setState(() {
-                _imagePickerOpen = !_imagePickerOpen;
-                _emojiOpen = false;
-              });
+              BlocProvider.of<PickerBloc>(context).add(ToggleImagePicker());
             },
           ),
         ],
@@ -292,7 +285,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
       );
     }

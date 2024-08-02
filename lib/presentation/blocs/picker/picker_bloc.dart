@@ -5,31 +5,31 @@ part 'picker_event.dart';
 part 'picker_state.dart';
 
 class PickerBloc extends Bloc<PickerEvent, PickerState> {
-  PickerBloc() : super(PickerInitial()) {
-    on<EmojiPickerToggleEvent>(_onEmojiPickerToggleEvent);
-    on<ImagePickerToggleEvent>(_onImagePickerToggleEvent);
-    on<KeyboardFocusEvent>(_onKeyboardFocusEvent);
+  PickerBloc() : super(const PickerState()) {
+    on<ToggleEmojiPicker>(_onToggleEmojiPicker);
+    on<ToggleImagePicker>(_onToggleImagePicker);
+    on<ClosePickers>(_onClosePickers);
   }
-  void _onEmojiPickerToggleEvent(
-      EmojiPickerToggleEvent event, Emitter<PickerState> emit) {
+
+  void _onToggleEmojiPicker(
+      ToggleEmojiPicker event, Emitter<PickerState> emit) {
     emit(state.copyWith(
-      isEmojiPickerOpen: !state.isEmojiPickerOpen,
+      isEmojiOpen: !state.isEmojiOpen,
       isImagePickerOpen: false,
     ));
   }
 
-  void _onImagePickerToggleEvent(
-      ImagePickerToggleEvent event, Emitter<PickerState> emit) {
+  void _onToggleImagePicker(
+      ToggleImagePicker event, Emitter<PickerState> emit) {
     emit(state.copyWith(
+      isEmojiOpen: false,
       isImagePickerOpen: !state.isImagePickerOpen,
-      isEmojiPickerOpen: false,
     ));
   }
 
-  void _onKeyboardFocusEvent(
-      KeyboardFocusEvent event, Emitter<PickerState> emit) {
+  void _onClosePickers(ClosePickers event, Emitter<PickerState> emit) {
     emit(state.copyWith(
-      isEmojiPickerOpen: false,
+      isEmojiOpen: false,
       isImagePickerOpen: false,
     ));
   }

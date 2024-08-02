@@ -1,22 +1,24 @@
 part of 'picker_bloc.dart';
 
 class PickerState extends Equatable {
-  final bool isEmojiPickerOpen;
+  final bool isEmojiOpen;
   final bool isImagePickerOpen;
+
   const PickerState({
-    this.isEmojiPickerOpen = false,
+    this.isEmojiOpen = false,
     this.isImagePickerOpen = false,
   });
 
-  PickerState copyWith({bool? isEmojiPickerOpen, bool? isImagePickerOpen}) {
+  @override
+  List<Object> get props => [isEmojiOpen, isImagePickerOpen];
+
+  PickerState copyWith({
+    bool? isEmojiOpen,
+    bool? isImagePickerOpen,
+  }) {
     return PickerState(
-      isEmojiPickerOpen: isEmojiPickerOpen ?? this.isEmojiPickerOpen,
+      isEmojiOpen: isEmojiOpen ?? this.isEmojiOpen,
       isImagePickerOpen: isImagePickerOpen ?? this.isImagePickerOpen,
     );
   }
-
-  @override
-  List<Object> get props => [];
 }
-
-class PickerInitial extends PickerState {}
