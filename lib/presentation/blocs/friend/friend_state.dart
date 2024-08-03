@@ -1,31 +1,37 @@
 part of 'friend_bloc.dart';
 
-sealed class FriendState extends Equatable {
-  const FriendState();
-  @override
-  List<Object> get props => [];
-}
+// enum ListStatus {
+//   init,
+//   loading,
+//   loaded,
+//   error,
+// }
 
-final class FriendInitial extends FriendState {}
-
-final class FriendLoading extends FriendState {}
-
-final class FriendLoaded extends FriendState {
-  final List<FriendEntity> fullFriends;
-  final List<FriendEntity> filteredFriends;
+class FriendState extends Equatable {
+  final List<FriendEntity> friendList;
   final Map<String, Image> avatarCache;
-
-  const FriendLoaded(this.fullFriends, this.filteredFriends, this.avatarCache);
-
-  @override
-  List<Object> get props => [fullFriends, filteredFriends, avatarCache];
-}
-
-final class FriendError extends FriendState {
+  final String query;
   final String message;
 
-  const FriendError(this.message);
+  const FriendState({
+    this.friendList = const [],
+    this.avatarCache = const {},
+    this.message = '',
+    this.query = '',
+  });
+  FriendState copyWith({
+    List<FriendEntity>? friendList,
+    Map<String, Image>? avatarCache,
+    String? query,
+    String? message,
+  }) {
+    return FriendState(
+        friendList: friendList ?? this.friendList,
+        avatarCache: avatarCache ?? this.avatarCache,
+        query: query ?? this.query,
+        message: message ?? this.message);
+  }
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [friendList, avatarCache, query, message];
 }

@@ -23,10 +23,10 @@ import '../../../../core/utils/notification_service.dart';
 
 @LazySingleton()
 class ApiService {
-  // static const String baseUrl = 'http://10.2.83.139:8888/api/';
+  static const String baseUrl = 'http://10.2.83.139:8888/api/';
   //static const String baseUrl = 'http://10.2.134.78:8888/api/';
 
-  static const String baseUrl = 'http://10.2.83.134:8888/api/';
+  // static const String baseUrl = 'http://10.2.83.134:8888/api/';
 
   static const String get = 'GET';
   static const String post = 'POST';

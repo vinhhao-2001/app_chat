@@ -1,12 +1,6 @@
-import 'package:app_chat/domain/entities/friend_entity.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../constants/api_constants.dart';
-
-List<FriendEntity> friendList = [];
-
-Map<String, Image> avatarCache = {};
 
 String formatMessageTime(DateTime timestamp) {
   final DateFormat formatter = DateFormat(ApiConstants.dateFormat);

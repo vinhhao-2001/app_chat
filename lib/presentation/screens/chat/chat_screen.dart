@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_chat/presentation/blocs/friend/friend_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
@@ -12,12 +13,10 @@ import '../../../core/theme/app_color.dart';
 import '../../../core/theme/app_text.dart';
 
 import '../../../core/utils/di.dart';
-import '../../../core/utils/utils.dart';
 
 import '../../../domain/entities/friend_entity.dart';
 import '../../../domain/entities/message_entity.dart';
 import '../../../domain/user_cases/shared_uc/load_avatar_use_case.dart';
-
 
 import '../../blocs/chat/chat_bloc.dart';
 import '../../blocs/picker/picker_bloc.dart';
@@ -30,10 +29,11 @@ import 'chat_widget/send/emoji_picker_widget.dart';
 import 'chat_widget/send/image_picker_widget.dart';
 
 class ChatScreen extends StatefulWidget {
-  final String friendID;
   final String token;
+  final FriendEntity selectedFriend;
 
-  const ChatScreen({super.key, required this.token, required this.friendID});
+  const ChatScreen(
+      {super.key, required this.selectedFriend, required this.token});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -45,19 +45,17 @@ class _ChatScreenState extends State<ChatScreen> {
   Timer? _timer;
   Image? _avatarImage;
   bool _isMounted = false;
-  late FriendEntity selectedFriend;
   DateTime? lastTime;
   final FocusNode _focusNode = FocusNode();
+  late FriendBloc _bloc;
 
   @override
   void initState() {
     super.initState();
     _startPolling();
-    selectedFriend = friendList.firstWhere(
-      (friend) => friend.friendID == widget.friendID,
-    );
+    _bloc = BlocProvider.of<FriendBloc>(context);
     BlocProvider.of<ChatBloc>(context)
-        .add(FetchMessages(widget.token, widget.friendID));
+        .add(FetchMessages(widget.token, widget.selectedFriend.friendID));
     _isMounted = true;
     _loadAvatar();
     _focusNode.addListener(() {
@@ -81,7 +79,7 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Column(
                 children: [
                   HeaderWidget(
-                    selectedFriend: selectedFriend,
+                    selectedFriend: widget.selectedFriend,
                     avatarImage: _avatarImage,
                   ),
                   Expanded(
@@ -102,7 +100,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               avatarWidget: AvatarWidget(
                                 image: _avatarImage,
                                 size: 15,
-                                isOnline: selectedFriend.isOnline,
+                                isOnline: widget.selectedFriend.isOnline,
                               ),
                             );
                           } else {
@@ -123,7 +121,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     EmojiPickerWidget(controller: _editTextSendMessage),
                   if (state.isImagePickerOpen)
                     ImagePickerWidget(
-                        token: widget.token, friendID: widget.friendID),
+                        token: widget.token,
+                        friendID: widget.selectedFriend.friendID),
                 ],
               ),
             ),
@@ -195,8 +194,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _startPolling() {
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      BlocProvider.of<ChatBloc>(context)
-          .add(FetchMessages(widget.token, widget.friendID, lastTime));
+      BlocProvider.of<ChatBloc>(context).add(FetchMessages(
+          widget.token, widget.selectedFriend.friendID, lastTime));
     });
   }
 
@@ -211,8 +210,8 @@ class _ChatScreenState extends State<ChatScreen> {
         images: [],
       );
 
-      BlocProvider.of<ChatBloc>(context)
-          .add(SendMessage(widget.token, widget.friendID, newMessage));
+      BlocProvider.of<ChatBloc>(context).add(SendMessage(
+          widget.token, widget.selectedFriend.friendID, newMessage));
       _editTextSendMessage.clear();
     }
   }
@@ -246,14 +245,12 @@ class _ChatScreenState extends State<ChatScreen> {
       images: [],
     );
 
-    BlocProvider.of<ChatBloc>(context)
-        .add(SendMessage(widget.token, widget.friendID, newMessage));
+    BlocProvider.of<ChatBloc>(context).add(
+        SendMessage(widget.token, widget.selectedFriend.friendID, newMessage));
   }
 
   void _loadAvatar() async {
-    final selectedFriend =
-        friendList.firstWhere((friend) => friend.friendID == widget.friendID);
-    Image? cachedAvatar = avatarCache[selectedFriend.avatar];
+    Image? cachedAvatar = _bloc.avatarCache[widget.selectedFriend.avatar];
 
     if (cachedAvatar != null) {
       if (_isMounted) {
@@ -263,12 +260,12 @@ class _ChatScreenState extends State<ChatScreen> {
       }
     } else {
       try {
-        final avatar =
-            await getIt<LoadAvatarUseCase>().execute(selectedFriend.avatar);
+        final avatar = await getIt<LoadAvatarUseCase>()
+            .execute(widget.selectedFriend.avatar);
         if (_isMounted) {
           setState(() {
             _avatarImage = avatar;
-            avatarCache[selectedFriend.avatar] = avatar;
+            _bloc.avatarCache[widget.selectedFriend.avatar] = avatar;
           });
         }
       } catch (e) {

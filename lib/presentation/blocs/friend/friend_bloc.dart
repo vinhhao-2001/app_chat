@@ -1,65 +1,83 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/theme/app_text.dart';
 import '../../../core/utils/di.dart';
-import '../../../core/utils/utils.dart';
 
-import '../../../data/data_sources/local/db_helper.dart';
 import '../../../domain/entities/friend_entity.dart';
 import '../../../domain/user_cases/friend_uc/get_friend_list_use_case.dart';
+import '../../../domain/user_cases/shared_uc/add_nickname_use_case.dart';
 
 part 'friend_event.dart';
 part 'friend_state.dart';
 
 class FriendBloc extends Bloc<FriendEvent, FriendState> {
-  final DatabaseHelper _dbHelper = DatabaseHelper();
-  FriendBloc() : super(FriendInitial()) {
+  List<FriendEntity> _friendList = [];
+  Map<String, Image> avatarCache = {};
+  FriendBloc() : super(const FriendState()) {
     on<FetchFriends>((event, emit) async {
-      emit(FriendLoading());
+      emit(state.copyWith(message: AppText.textFriendEmpty));
       try {
         final getFriendList = getIt<GetFriendListUseCase>();
         // lấy danh sách bạn bè
-        friendList = await getFriendList.execute(event.token);
-        emit(FriendLoaded(friendList, friendList, avatarCache));
+        _friendList = await getFriendList.execute(event.token);
+        if (_friendList.isNotEmpty) {
+          emit(state.copyWith(friendList: _friendList));
+        } else {
+          emit(state.copyWith(message: AppText.textFriendEmpty));
+        }
       } catch (e) {
-        emit(FriendError(e.toString()));
+        emit(state.copyWith(message: AppText.internetError));
       }
     });
 
     on<SearchFriends>((event, emit) {
-      final currentState = state;
-      if (currentState is FriendLoaded) {
+      if (_friendList.isNotEmpty) {
         if (event.query.isEmpty) {
-          emit(FriendLoaded(
-              currentState.fullFriends, currentState.fullFriends, avatarCache));
+          emit(state.copyWith(friendList: _friendList));
         } else {
-          final filteredFriends = currentState.fullFriends
+          final filteredList = _friendList
               .where((friend) => friend.fullName
-              .toLowerCase()
-              .contains(event.query.toLowerCase()))
+                  .toLowerCase()
+                  .contains(event.query.toLowerCase()))
               .toList();
-          emit(FriendLoaded(
-              currentState.fullFriends, filteredFriends, avatarCache));
+          emit(state.copyWith(
+              friendList: filteredList,
+              query: event.query,
+              message: AppText.textSearchFriendEmpty));
         }
       }
     });
 
     on<CacheAvatar>((event, emit) {
-      if (state is FriendLoaded) {
-        final currentState = state as FriendLoaded;
-        avatarCache = Map<String, Image>.from(currentState.avatarCache)
+      if (state.friendList.isNotEmpty) {
+        avatarCache = Map<String, Image>.from(state.avatarCache)
           ..[event.avatarUrl] = event.avatarImage;
-        emit(FriendLoaded(currentState.fullFriends,
-            currentState.filteredFriends, avatarCache));
+        emit(state.copyWith(avatarCache: avatarCache));
       }
     });
 
     on<UpdateNickname>((event, emit) async {
-      await _dbHelper.insertNickname(event.friendID, event.nickname);
-      add(FetchFriends(event.token));
+      final updateNickname = getIt<AddNicknameUseCase>();
+      await updateNickname.execute(event.friendID, event.nickname);
+      final updatedFriendList = _friendList.map((friend) {
+        if (friend.friendID == event.friendID) {
+          return FriendEntity(
+              friendID: friend.friendID,
+              nickname: event.nickname,
+              fullName: friend.fullName,
+              avatar: friend.avatar,
+              content: friend.content,
+              files: friend.files,
+              images: friend.images,
+              isSend: friend.isSend,
+              isOnline: friend.isOnline);
+        }
+        return friend;
+      }).toList();
+      emit(state.copyWith(friendList: updatedFriendList));
     });
   }
 }

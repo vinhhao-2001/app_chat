@@ -28,12 +28,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late TextEditingController searchController;
-
   @override
   void initState() {
     super.initState();
-    searchController = TextEditingController();
     context.read<UserBloc>().add(GetUserInfo(widget.token));
     context.read<FriendBloc>().add(FetchFriends(widget.token));
   }
@@ -49,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 30),
             _buildAppBarWidget(context),
             const SizedBox(height: 20),
-            _buildSearchBarWidget(context, searchController),
+            _buildSearchBarWidget(context),
             const SizedBox(height: 20),
             const Text(
               AppText.textFriendList,
@@ -109,42 +106,52 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSearchBarWidget(
-      BuildContext context, TextEditingController searchController) {
-    return TextFormField(
-      controller: searchController,
-      onChanged: (query) =>
-          context.read<FriendBloc>().add(SearchFriends(query)),
-      decoration: InputDecoration(
-        hintText: AppText.hintTextSearch,
-        prefixIcon: const Icon(Icons.search),
-        suffixIcon: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () {
-            if (searchController.text.isNotEmpty) {
-              searchController.clear();
-              context.read<FriendBloc>().add(const SearchFriends(''));
-            }
+  Widget _buildSearchBarWidget(BuildContext context) {
+    TextEditingController searchController = TextEditingController();
+    return BlocBuilder<FriendBloc, FriendState>(
+      buildWhen: (a, b) => a.query != b.query,
+      builder: (context, state) {
+        return TextFormField(
+          controller: searchController,
+          onChanged: (query) => {
+            context.read<FriendBloc>().add(SearchFriends(query)),
           },
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
+          decoration: InputDecoration(
+            hintText: AppText.hintTextSearch,
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                if (state.query.isNotEmpty) {
+                  searchController.clear();
+                  context.read<FriendBloc>().add(const SearchFriends(''));
+                }
+              },
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        );
+      },
     );
   }
 
   Widget _buildFriendListWidget(BuildContext context) {
     return Expanded(
       child: BlocBuilder<FriendBloc, FriendState>(
+        buildWhen: (a, b) =>
+            a.friendList != b.friendList ||
+            a.message != b.message ||
+            a.query != b.query,
         builder: (context, state) {
-          if (state is FriendLoading) {
+          if (state.message.isEmpty && state.friendList.isEmpty) {
             return const Center(child: LoadingWidget());
-          } else if (state is FriendLoaded) {
+          } else if (state.friendList.isNotEmpty) {
             return ListView.builder(
-              itemCount: state.filteredFriends.length,
+              itemCount: state.friendList.length,
               itemBuilder: (context, index) {
-                final friend = state.filteredFriends[index];
+                final friend = state.friendList[index];
                 Image? avatarImage = state.avatarCache[friend.avatar];
 
                 return FutureBuilder<Image>(
@@ -208,8 +215,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       subtitle: friend.content.isNotEmpty
                           ? Text(
                               friend.content,
-                              style: const TextStyle(
-                                  color: AppColor.contentColor),
+                              style:
+                                  const TextStyle(color: AppColor.contentColor),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             )
@@ -237,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         MaterialPageRoute(
                           builder: (context) => ChatScreen(
                             token: widget.token,
-                            friendID: friend.friendID,
+                            selectedFriend: friend,
                           ),
                         ),
                       ),
@@ -246,11 +253,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
             );
-          } else if (state is FriendError) {
-            return Container();
-          } else {
-            return Container();
           }
+          return Center(
+            child: Text(state.message),
+          );
         },
       ),
     );
@@ -359,7 +365,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    searchController.dispose();
     super.dispose();
   }
 }

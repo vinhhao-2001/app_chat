@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/theme/app_text.dart';
-import '../../../../../core/utils/di.dart';
+
 import '../../../../../domain/entities/friend_entity.dart';
-import '../../../../../domain/user_cases/shared_uc/add_nickname_use_case.dart';
+
 import '../../../../blocs/friend/friend_bloc.dart';
 import '../../../../widgets/widget.dart';
 import '../avatar_widget.dart';
@@ -26,8 +26,7 @@ class HeaderWidget extends StatelessWidget {
     return Stack(
       children: [
         GestureDetector(
-          onTap: () =>
-          {
+          onTap: () => {
             showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -60,6 +59,7 @@ class HeaderWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         BlocBuilder<FriendBloc, FriendState>(
+                          buildWhen: (a, b) => a.friendList != b.friendList,
                           builder: (context, state) {
                             return Text(
                               selectedFriend.nickname ??

@@ -36,9 +36,8 @@ final class CacheAvatar extends FriendEvent {
 final class UpdateNickname extends FriendEvent {
   final String friendID;
   final String nickname;
-  final String token;
-  const UpdateNickname(this.friendID, this.nickname, this.token);
+  const UpdateNickname(this.friendID, this.nickname);
 
   @override
-  List<Object> get props => [friendID, nickname, token];
+  List<Object> get props => [friendID, nickname];
 }

@@ -29,9 +29,11 @@ class AppText {
   static const String hintTextNewName = 'Nhập tên mới';
   static const String textNickname = 'Đặt biệt danh';
   static const String hintTextNickname = 'Nhập biệt danh';
-
+  static const String textFriendEmpty = 'Chưa có bạn bè';
+  static const String textSearchFriendEmpty = 'Không tìm thấy bạn bè';
   // Tin nhắn
   static const String textChatEmpty = 'Chưa có cuộc trò chuyện';
+
   static const String online = 'Trực tuyến';
   static const String offline = 'Không hoạt động';
   static const String hintTextChat = 'Nhập tin nhắn';
