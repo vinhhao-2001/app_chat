@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../core/theme/app_text.dart';
 import '../../../core/utils/di.dart';
@@ -13,12 +14,14 @@ import '../../../domain/user_cases/shared_uc/add_nickname_use_case.dart';
 part 'friend_event.dart';
 part 'friend_state.dart';
 
+@injectable
 class FriendBloc extends Bloc<FriendEvent, FriendState> {
   List<FriendEntity> _friendList = [];
-  Map<String, Image> avatarCache = {};
+  Map<String, Image> _avatarCache = {};
+  Map<String, Image> get avatarCache => _avatarCache;
   FriendBloc() : super(const FriendState()) {
     on<FetchFriends>((event, emit) async {
-      emit(state.copyWith(message: AppText.textFriendEmpty));
+      emit(state.copyWith());
       try {
         final getFriendList = getIt<GetFriendListUseCase>();
         // lấy danh sách bạn bè
@@ -53,9 +56,9 @@ class FriendBloc extends Bloc<FriendEvent, FriendState> {
 
     on<CacheAvatar>((event, emit) {
       if (state.friendList.isNotEmpty) {
-        avatarCache = Map<String, Image>.from(state.avatarCache)
+        _avatarCache = Map<String, Image>.from(state.avatarCache)
           ..[event.avatarUrl] = event.avatarImage;
-        emit(state.copyWith(avatarCache: avatarCache));
+        emit(state.copyWith(avatarCache: _avatarCache));
       }
     });
 

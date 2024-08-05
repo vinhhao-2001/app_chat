@@ -1,52 +1,32 @@
 part of 'user_bloc.dart';
 
-sealed class UserState extends Equatable {
-  const UserState();
-
-  @override
-  List<Object?> get props => [];
-}
-
-final class UserInitialState extends UserState {}
-
-final class UserLoadedState extends UserState {
+class UserState extends Equatable {
   final String userName;
   final String fullName;
-  final String? avatar;
   final Image? avatarImage;
+  final String message;
 
-  const UserLoadedState({
-    required this.userName,
-    required this.fullName,
-    required this.avatar,
+  const UserState({
+    this.userName = '',
+    this.fullName = '',
     this.avatarImage,
+    this.message = '',
   });
 
-  UserLoadedState copyWith({
+  UserState copyWith({
     String? userName,
     String? fullName,
-    String? avatar,
     Image? avatarImage,
+    String? message,
   }) {
-    return UserLoadedState(
+    return UserState(
       userName: userName ?? this.userName,
       fullName: fullName ?? this.fullName,
-      avatar: avatar ?? this.avatar,
       avatarImage: avatarImage ?? this.avatarImage,
+      message: message ?? this.message,
     );
   }
 
   @override
-  List<Object?> get props => [userName, fullName, avatar, avatarImage];
-}
-
-final class UserLoadingState extends UserState {}
-
-final class UserErrorState extends UserState {
-  final String message;
-
-  const UserErrorState(this.message);
-
-  @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [userName, fullName, avatarImage, message];
 }

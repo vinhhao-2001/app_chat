@@ -1,9 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 part 'picker_event.dart';
 part 'picker_state.dart';
 
+@injectable
 class PickerBloc extends Bloc<PickerEvent, PickerState> {
   PickerBloc() : super(const PickerState()) {
     on<ToggleEmojiPicker>(_onToggleEmojiPicker);

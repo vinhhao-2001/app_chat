@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:app_chat/presentation/blocs/friend/friend_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
@@ -31,9 +29,13 @@ import 'chat_widget/send/image_picker_widget.dart';
 class ChatScreen extends StatefulWidget {
   final String token;
   final FriendEntity selectedFriend;
-
-  const ChatScreen(
-      {super.key, required this.selectedFriend, required this.token});
+  final Image? friendAvatar;
+  const ChatScreen({
+    super.key,
+    required this.selectedFriend,
+    required this.token,
+    required this.friendAvatar,
+  });
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -47,20 +49,21 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _isMounted = false;
   DateTime? lastTime;
   final FocusNode _focusNode = FocusNode();
-  late FriendBloc _bloc;
+  late ChatBloc _chatBloc;
+  late PickerBloc _pickerBloc;
 
   @override
   void initState() {
     super.initState();
     _startPolling();
-    _bloc = BlocProvider.of<FriendBloc>(context);
-    BlocProvider.of<ChatBloc>(context)
-        .add(FetchMessages(widget.token, widget.selectedFriend.friendID));
+    _pickerBloc = context.read<PickerBloc>();
+    _chatBloc = context.read<ChatBloc>();
+    _chatBloc.add(FetchMessages(widget.token, widget.selectedFriend.friendID));
     _isMounted = true;
     _loadAvatar();
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        BlocProvider.of<PickerBloc>(context).add(ClosePickers());
+        _pickerBloc.add(ClosePickers());
       }
     });
   }
@@ -72,7 +75,7 @@ class _ChatScreenState extends State<ChatScreen> {
         return GestureDetector(
           onTap: () {
             _focusNode.unfocus();
-            BlocProvider.of<PickerBloc>(context).add(ClosePickers());
+            _pickerBloc.add(ClosePickers());
           },
           child: Scaffold(
             body: SafeArea(
@@ -144,7 +147,7 @@ class _ChatScreenState extends State<ChatScreen> {
             icon: const Icon(Icons.emoji_emotions_outlined),
             onPressed: () {
               _focusNode.unfocus();
-              BlocProvider.of<PickerBloc>(context).add(ToggleEmojiPicker());
+              _pickerBloc.add(ToggleEmojiPicker());
             },
           ),
           Expanded(
@@ -184,7 +187,7 @@ class _ChatScreenState extends State<ChatScreen> {
             icon: const Icon(Icons.image),
             onPressed: () {
               _focusNode.unfocus();
-              BlocProvider.of<PickerBloc>(context).add(ToggleImagePicker());
+              _pickerBloc.add(ToggleImagePicker());
             },
           ),
         ],
@@ -194,7 +197,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _startPolling() {
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      BlocProvider.of<ChatBloc>(context).add(FetchMessages(
+      _chatBloc.add(FetchMessages(
           widget.token, widget.selectedFriend.friendID, lastTime));
     });
   }
@@ -210,7 +213,7 @@ class _ChatScreenState extends State<ChatScreen> {
         images: [],
       );
 
-      BlocProvider.of<ChatBloc>(context).add(SendMessage(
+      _chatBloc.add(SendMessage(
           widget.token, widget.selectedFriend.friendID, newMessage));
       _editTextSendMessage.clear();
     }
@@ -245,17 +248,15 @@ class _ChatScreenState extends State<ChatScreen> {
       images: [],
     );
 
-    BlocProvider.of<ChatBloc>(context).add(
+    _chatBloc.add(
         SendMessage(widget.token, widget.selectedFriend.friendID, newMessage));
   }
 
   void _loadAvatar() async {
-    Image? cachedAvatar = _bloc.avatarCache[widget.selectedFriend.avatar];
-
-    if (cachedAvatar != null) {
+    if (widget.friendAvatar != null) {
       if (_isMounted) {
         setState(() {
-          _avatarImage = cachedAvatar;
+          _avatarImage = widget.friendAvatar;
         });
       }
     } else {
@@ -265,7 +266,6 @@ class _ChatScreenState extends State<ChatScreen> {
         if (_isMounted) {
           setState(() {
             _avatarImage = avatar;
-            _bloc.avatarCache[widget.selectedFriend.avatar] = avatar;
           });
         }
       } catch (e) {

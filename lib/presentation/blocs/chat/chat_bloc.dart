@@ -1,6 +1,7 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../core/utils/di.dart';
 import '../../../domain/entities/message_entity.dart';
@@ -11,6 +12,7 @@ import '../../../domain/user_cases/message_uc/send_message_use_case.dart';
 part 'chat_event.dart';
 part 'chat_state.dart';
 
+@injectable
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   List<MessageEntity> _messageList = [];
 

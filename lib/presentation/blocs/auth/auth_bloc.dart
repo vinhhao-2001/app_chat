@@ -13,7 +13,7 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(AuthInitialState()) {
+  AuthBloc() : super(const AuthState()) {
     on<LoginButtonEvent>(_onLoginButtonEvent);
     on<RegisterButtonEvent>(_onRegisterButtonEvent);
     on<CheckUser>(_onCheckUser);
@@ -31,22 +31,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       errorMessage = AppText.passwordEmpty;
     }
     if (errorMessage != null) {
-      emit(AuthFailureState(errorMessage));
+      emit(state.copyWith(message: errorMessage));
       return;
     }
-
-    emit(AuthLoadingState());
+    emit(state.copyWith(message: 'loading')); // auth loading
 
     try {
       final user = await loginUseCase
           .execute(event.username, event.password)
           .timeout(const Duration(seconds: 5));
-      emit(AuthSuccessState(user.token));
+      emit(state.copyWith(token: user.token, message: '')); // login success
     } catch (error) {
       if (error is TimeoutException) {
-        emit(const AuthFailureState(AppText.internetError));
+        emit(state.copyWith(message: AppText.internetError));
       } else {
-        emit(AuthFailureState(error.toString()));
+        emit(state.copyWith(message: error.toString()));
       }
     }
   }
@@ -71,22 +70,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
 
     if (errorMessage != null) {
-      emit(AuthFailureState(errorMessage));
+      emit(state.copyWith(message: errorMessage));
       return;
     }
-
-    emit(AuthLoadingState());
-
+    emit(state.copyWith()); // loading register
     try {
       final user = await registerUseCase
           .execute(event.fullName, event.username, event.password)
           .timeout(const Duration(seconds: 5));
-      emit(AuthSuccessState(user.token));
+      emit(state.copyWith(token: user.token)); // register success
     } catch (error) {
       if (error is TimeoutException) {
-        emit(const AuthFailureState(AppText.internetError));
+        emit(state.copyWith(message: AppText.internetError));
       } else {
-        emit(AuthFailureState(error.toString()));
+        emit(state.copyWith(message: error.toString()));
       }
     }
   }
@@ -96,9 +93,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final checkUser = getIt<CheckUserUseCase>();
     final user = await checkUser.execute();
     if (user != null) {
-      emit(UserAuthenticatedState(user.token));
+      emit(state.copyWith(token: user.token));
     } else {
-      emit(UserUnauthenticatedState());
+      emit(state.copyWith());
     }
   }
 }

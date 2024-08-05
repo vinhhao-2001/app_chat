@@ -54,6 +54,9 @@ import 'package:app_chat/domain/user_cases/user_uc/get_user_use_case.dart'
     as _i793;
 import 'package:app_chat/domain/user_cases/user_uc/update_user_use_case.dart'
     as _i1022;
+import 'package:app_chat/presentation/blocs/chat/chat_bloc.dart' as _i175;
+import 'package:app_chat/presentation/blocs/friend/friend_bloc.dart' as _i535;
+import 'package:app_chat/presentation/blocs/picker/picker_bloc.dart' as _i807;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
@@ -71,8 +74,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i228.MessageDataMapper>(() => _i228.MessageDataMapper());
     gh.factory<_i378.UserDataMapper>(() => _i378.UserDataMapper());
     gh.factory<_i965.FriendDataMapper>(() => _i965.FriendDataMapper());
+    gh.factory<_i175.ChatBloc>(() => _i175.ChatBloc());
+    gh.factory<_i807.PickerBloc>(() => _i807.PickerBloc());
     gh.lazySingleton<_i175.DatabaseHelper>(() => _i175.DatabaseHelper());
     gh.lazySingleton<_i1023.ApiService>(() => _i1023.ApiService());
+    gh.lazySingleton<_i535.FriendBloc>(() => _i535.FriendBloc());
     gh.lazySingleton<_i210.UserRepository>(() => _i584.UserRepositoryImpl(
           gh<_i1023.ApiService>(),
           gh<_i378.UserDataMapper>(),

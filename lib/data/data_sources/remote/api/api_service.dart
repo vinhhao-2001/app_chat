@@ -23,8 +23,8 @@ import '../../../../core/utils/notification_service.dart';
 
 @LazySingleton()
 class ApiService {
-  static const String baseUrl = 'http://10.2.83.139:8888/api/';
-  //static const String baseUrl = 'http://10.2.134.78:8888/api/';
+  static const String baseUrl = 'http://10.2.83.185:8888/api/';
+  // static const String baseUrl = 'http://10.2.134.78:8888/api/';
 
   // static const String baseUrl = 'http://10.2.83.134:8888/api/';
 
@@ -124,7 +124,7 @@ class ApiService {
         headers: <String, String>{
           ApiConstants.auth: '${ApiConstants.bearer} $token',
         },
-      ).timeout(const Duration(seconds: 6));
+      ).timeout(const Duration(seconds: 4));
       // thông tin trả về
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
       if (responseBody[ApiConstants.status] == 1) {
@@ -154,7 +154,7 @@ class ApiService {
         headers: <String, String>{
           ApiConstants.auth: '${ApiConstants.bearer} $token',
         },
-      ).timeout(const Duration(seconds: 5));
+      ).timeout(const Duration(seconds: 4));
       // thông tin trả về
       final List<dynamic> data = jsonDecode(response.body)[ApiConstants.data];
       List<FriendModel> friendList = data
@@ -229,7 +229,7 @@ class ApiService {
     try {
       final response = await http
           .get(uri, headers: headers)
-          .timeout(const Duration(seconds: 10));
+          .timeout(const Duration(seconds: 4));
       final jsonData = json.decode(response.body);
       if (jsonData[ApiConstants.status] == 1 &&
           jsonData.containsKey(ApiConstants.data)) {
@@ -254,7 +254,7 @@ class ApiService {
       final String getAvatarUrl = '$baseUrl${ApiConstants.apiImages}$avatarUrl';
       final response = await http
           .get(Uri.parse(getAvatarUrl))
-          .timeout(const Duration(seconds: 5));
+          .timeout(const Duration(seconds: 4));
       if (response.statusCode == 200) {
         final Uint8List imageBytes = response.bodyBytes;
         return imageBytes;
@@ -271,7 +271,7 @@ class ApiService {
       final String getAvatarUrl = '$baseUrl$imageUrl';
       final response = await http
           .get(Uri.parse(getAvatarUrl))
-          .timeout(const Duration(seconds: 5));
+          .timeout(const Duration(seconds: 4));
       if (response.statusCode == 200) {
         final Uint8List imageBytes = response.bodyBytes;
         return imageBytes;

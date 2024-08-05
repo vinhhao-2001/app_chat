@@ -1,34 +1,21 @@
 part of 'auth_bloc.dart';
 
-sealed class AuthState extends Equatable {
-  const AuthState();
+class AuthState extends Equatable {
+  final String token;
+  final String message;
+  const AuthState({
+    this.token = '',
+    this.message = '',
+  });
+
+  AuthState copyWith({
+    final String? token,
+    final String? message,
+  }) {
+    return AuthState(
+        token: token ?? this.token, message: message ?? this.message);
+  }
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [token, message];
 }
-
-class AuthInitialState extends AuthState {}
-
-class AuthLoadingState extends AuthState {}
-
-class AuthSuccessState extends AuthState {
-  final String token;
-
-  const AuthSuccessState(this.token);
-}
-
-class AuthFailureState extends AuthState {
-  final String error;
-
-  const AuthFailureState(this.error);
-}
-
-// sử dụng trong splash screen
-final class UserAuthenticatedState extends AuthState {
-  final String token;
-  const UserAuthenticatedState(this.token);
-  @override
-  List<Object> get props => [token];
-}
-
-class UserUnauthenticatedState extends AuthState {}

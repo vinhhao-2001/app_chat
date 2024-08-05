@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/theme/app_text.dart';
 import '../blocs/auth/auth_bloc.dart';
-import 'home_screen.dart';
-import 'login_screen.dart';
+import 'home/home_screen.dart';
+import 'login/login_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -12,17 +12,16 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<AuthBloc>().add(CheckUser());
-
     return Scaffold(
       body: Center(
         child: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
-            if (state is UserAuthenticatedState) {
+            if (state.token.isNotEmpty) {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                     builder: (_) => HomeScreen(token: state.token)),
               );
-            } else if (state is UserUnauthenticatedState) {
+            } else if (state.token.isEmpty) {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (_) => const LoginScreen()),
               );
