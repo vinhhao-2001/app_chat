@@ -91,16 +91,14 @@ class _HomeScreenState extends State<HomeScreen> {
             if (state.userName.isEmpty) {
               if (state.message.isNotEmpty) {
                 // xử lý trường hợp lỗi server
-                FlushBarHelper.flushBarErrorMessage(
-                    state.message, context);
+                FlushBarHelper.flushBarErrorMessage(state.message, context);
                 _logout(context);
               }
               return const LoadingWidget();
             } else {
               if (state.message.isNotEmpty) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  FlushBarHelper.flushBarErrorMessage(
-                      state.message, context);
+                  FlushBarHelper.flushBarErrorMessage(state.message, context);
                 });
                 // trường hợp mất mạng
               }
@@ -242,16 +240,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                       maxLines: 1,
                                     )
                                   : null,
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChatScreen(
-                            token: widget.token,
-                            selectedFriend: friend,
-                            friendAvatar: avatarImage,
-                          ),
-                        ),
-                      ),
+                      onTap: snapshot.connectionState == ConnectionState.done &&
+                              snapshot.data != null
+                          ? () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatScreen(
+                                    token: widget.token,
+                                    selectedFriend: friend,
+                                    friendAvatar:
+                                        friendBloc.avatarCache[friend.avatar],
+                                  ),
+                                ),
+                              )
+                          : null,
                     );
                   },
                 );

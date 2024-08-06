@@ -3,18 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
 
-import '../../../core/constants/asset_constants.dart';
-
 import '../../../core/data_types/file_data.dart';
 
 import '../../../core/theme/app_color.dart';
 import '../../../core/theme/app_text.dart';
 
-import '../../../core/utils/di.dart';
-
 import '../../../domain/entities/friend_entity.dart';
 import '../../../domain/entities/message_entity.dart';
-import '../../../domain/user_cases/shared_uc/load_avatar_use_case.dart';
 
 import '../../blocs/chat/chat_bloc.dart';
 import '../../blocs/picker/picker_bloc.dart';
@@ -45,8 +40,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _editTextSendMessage = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   Timer? _timer;
-  Image? _avatarImage;
-  bool _isMounted = false;
   DateTime? lastTime;
   final FocusNode _focusNode = FocusNode();
   late ChatBloc _chatBloc;
@@ -59,8 +52,6 @@ class _ChatScreenState extends State<ChatScreen> {
     _pickerBloc = context.read<PickerBloc>();
     _chatBloc = context.read<ChatBloc>();
     _chatBloc.add(FetchMessages(widget.token, widget.selectedFriend.friendID));
-    _isMounted = true;
-    _loadAvatar();
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
         _pickerBloc.add(ClosePickers());
@@ -83,7 +74,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   HeaderWidget(
                     selectedFriend: widget.selectedFriend,
-                    avatarImage: _avatarImage,
+                    avatarImage: widget.friendAvatar,
                   ),
                   Expanded(
                     child: BlocBuilder<ChatBloc, ChatState>(
@@ -102,7 +93,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               messageList: messageList,
                               scrollController: _scrollController,
                               avatarWidget: AvatarWidget(
-                                image: _avatarImage,
+                                image: widget.friendAvatar,
                                 size: 15,
                                 isOnline: widget.selectedFriend.isOnline,
                               ),
@@ -253,32 +244,6 @@ class _ChatScreenState extends State<ChatScreen> {
         SendMessage(widget.token, widget.selectedFriend.friendID, newMessage));
   }
 
-  void _loadAvatar() async {
-    if (widget.friendAvatar != null) {
-      if (_isMounted) {
-        setState(() {
-          _avatarImage = widget.friendAvatar;
-        });
-      }
-    } else {
-      try {
-        final avatar = await getIt<LoadAvatarUseCase>()
-            .execute(widget.selectedFriend.avatar);
-        if (_isMounted) {
-          setState(() {
-            _avatarImage = avatar;
-          });
-        }
-      } catch (e) {
-        if (_isMounted) {
-          setState(() {
-            _avatarImage = Image.asset(AssetConstants.iconPerson);
-          });
-        }
-      }
-    }
-  }
-
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
@@ -294,7 +259,6 @@ class _ChatScreenState extends State<ChatScreen> {
     _editTextSendMessage.dispose();
     _scrollController.dispose();
     _timer?.cancel();
-    _isMounted = false;
     super.dispose();
   }
 }
