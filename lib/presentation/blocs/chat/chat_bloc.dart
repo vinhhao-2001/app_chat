@@ -42,8 +42,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final reloadMessage = getIt<ReloadMessageUseCase>();
       final messageNew = await reloadMessage.execute(
           event.token, event.friendID, event.lastTime!);
-      _messageList.addAll(messageNew);
-      emit(state.copyWiht(messageList: _messageList));
+      if (messageNew.isNotEmpty) {
+        _messageList.addAll(messageNew);
+        emit(state.copyWiht(messageList: _messageList));
+      }
     }
   }
 

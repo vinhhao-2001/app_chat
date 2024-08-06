@@ -78,33 +78,30 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   Expanded(
                     child: BlocBuilder<ChatBloc, ChatState>(
-                      buildWhen: (a, b) => a.messageList != b.messageList,
+                      buildWhen: (a, b) =>
+                          a.messageList != b.messageList || a.error != b.error,
                       builder: (context, state) {
                         if (state.messageList.isEmpty && state.error.isEmpty) {
                           return const Center(child: LoadingWidget(size: 60));
                         } else if (state.messageList.isNotEmpty) {
                           final messageList = state.messageList;
-                          if (messageList.isNotEmpty) {
-                            lastTime = messageList.last.createdAt;
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              _scrollToBottom();
-                            });
-                            return MessageListWidget(
-                              messageList: messageList,
-                              scrollController: _scrollController,
-                              avatarWidget: AvatarWidget(
-                                image: widget.friendAvatar,
-                                size: 15,
-                                isOnline: widget.selectedFriend.isOnline,
-                              ),
-                            );
-                          } else {
-                            lastTime = DateTime.now()
-                                .subtract(const Duration(hours: 7));
-                            return const Center(
-                                child: Text(AppText.textChatEmpty));
-                          }
+
+                          lastTime = messageList.last.createdAt;
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _scrollToBottom();
+                          });
+                          return MessageListWidget(
+                            messageList: messageList,
+                            scrollController: _scrollController,
+                            avatarWidget: AvatarWidget(
+                              image: widget.friendAvatar,
+                              size: 15,
+                              isOnline: widget.selectedFriend.isOnline,
+                            ),
+                          );
                         } else {
+                          lastTime =
+                              DateTime.now().subtract(const Duration(hours: 7));
                           return const Center(
                               child: Text(AppText.textChatEmpty));
                         }
