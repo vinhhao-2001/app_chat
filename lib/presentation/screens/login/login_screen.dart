@@ -21,7 +21,7 @@ class LoginScreen extends StatefulWidget {
 class _BodyLoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  late AuthBloc _authBloc;
+  late final AuthBloc _authBloc;
 
   @override
   void initState() {
@@ -146,7 +146,6 @@ class _BodyLoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _authBloc.close();
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();

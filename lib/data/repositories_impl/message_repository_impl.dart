@@ -6,7 +6,6 @@ import 'package:app_chat/domain/entities/message_entity.dart';
 import 'package:app_chat/domain/repositories/message_repository.dart';
 import 'package:injectable/injectable.dart';
 
-
 @LazySingleton(as: MessageRepository)
 class MessageRepositoryImpl extends MessageRepository {
   final ApiService _apiService;
@@ -14,7 +13,6 @@ class MessageRepositoryImpl extends MessageRepository {
   final MessageDataMapper _messageDataMapper;
   MessageRepositoryImpl(
       this._apiService, this._databaseHelper, this._messageDataMapper);
-
 
   @override
   Stream<List<MessageEntity>> getMessageList(
@@ -32,20 +30,17 @@ class MessageRepositoryImpl extends MessageRepository {
       final messageServer = await _apiService.getMessageList(token, friendID,
           lastTime: messageDB.last.createdAt);
       if (messageServer.isNotEmpty) {
-        messageList.addAll(messageServer);
         // Lưu tin nhắn mới vào db
         await _databaseHelper.insertMessages(friendID, messageServer);
 
         // Trả về danh sách tin nhắn mới từ server
-        yield messageList.map(_messageDataMapper.mapToMessageEntity).toList();
+        yield messageServer.map(_messageDataMapper.mapToMessageEntity).toList();
       }
     } else {
       // DB rỗng thì lấy toàn bộ tin nhắn trên server
       final messageServer = await _apiService.getMessageList(token, friendID);
       if (messageServer.isNotEmpty) {
-        // Thực hiện khi có tin nhắn trên server
-        messageList.addAll(messageServer);
-        // Lưu tin nhắn vào db
+        // Lưu tin nhắn vào db nếu không rỗng
         await _databaseHelper.insertMessages(friendID, messageServer);
 
         // Trả về danh sách tin nhắn từ server

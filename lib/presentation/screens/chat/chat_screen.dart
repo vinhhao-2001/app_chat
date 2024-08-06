@@ -87,18 +87,19 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   Expanded(
                     child: BlocBuilder<ChatBloc, ChatState>(
+                      buildWhen: (a, b) => a.messageList != b.messageList,
                       builder: (context, state) {
-                        if (state is ChatLoadingState) {
+                        if (state.messageList.isEmpty && state.error.isEmpty) {
                           return const Center(child: LoadingWidget(size: 60));
-                        } else if (state is ChatLoadedState) {
-                          final messages = state.messages;
-                          if (messages.isNotEmpty) {
-                            lastTime = messages.last.createdAt;
+                        } else if (state.messageList.isNotEmpty) {
+                          final messageList = state.messageList;
+                          if (messageList.isNotEmpty) {
+                            lastTime = messageList.last.createdAt;
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               _scrollToBottom();
                             });
                             return MessageListWidget(
-                              messageList: messages,
+                              messageList: messageList,
                               scrollController: _scrollController,
                               avatarWidget: AvatarWidget(
                                 image: _avatarImage,
@@ -112,10 +113,10 @@ class _ChatScreenState extends State<ChatScreen> {
                             return const Center(
                                 child: Text(AppText.textChatEmpty));
                           }
-                        } else if (state is ChatErrorState) {
-                          // log(state.message);
+                        } else {
+                          return const Center(
+                              child: Text(AppText.textChatEmpty));
                         }
-                        return const Center(child: Text(AppText.textChatEmpty));
                       },
                     ),
                   ),

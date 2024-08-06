@@ -1,4 +1,4 @@
-
+import 'package:app_chat/core/theme/app_text.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
@@ -16,7 +16,7 @@ part 'chat_state.dart';
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   List<MessageEntity> _messageList = [];
 
-  ChatBloc() : super(ChatInitialState()) {
+  ChatBloc() : super(const ChatState()) {
     on<FetchMessages>(_onFetchMessages);
     on<SendMessage>(_onSendMessage);
   }
@@ -25,14 +25,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       FetchMessages event, Emitter<ChatState> emit) async {
     if (event.lastTime == null) {
       _messageList = [];
-      emit(ChatLoadingState());
+      emit(state.copyWiht(messageList: [], error: ''));
       final getMessage = getIt<GetMessageListUseCase>();
-
       await for (var messageList
           in getMessage.execute(event.token, event.friendID)) {
-        _messageList = messageList;
-        emit(ChatInitialState());
-        emit(ChatLoadedState(_messageList));
+        _messageList.addAll(messageList);
+        if (messageList.isNotEmpty) {
+          // danh sách lấy về không rỗng thì hiển thị ra màn hình
+          emit(state.copyWiht(messageList: _messageList));
+        } else {
+          emit(state.copyWiht(error: AppText.textChatEmpty));
+        }
       }
     } else {
       // lấy tin nhắn định kì
@@ -40,8 +43,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final messageNew = await reloadMessage.execute(
           event.token, event.friendID, event.lastTime!);
       _messageList.addAll(messageNew);
-      emit(ChatInitialState());
-      emit(ChatLoadedState(_messageList));
+      emit(state.copyWiht(messageList: _messageList));
     }
   }
 
@@ -49,20 +51,21 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       SendMessage event, Emitter<ChatState> emit) async {
     final sendMessage = getIt<SendMessageUseCase>();
     try {
-      _messageList.add(event.message); // trạng thái đang gửi
-      emit(ChatLoadedState(_messageList));
+      _messageList.add(event.message); // state đang gửi
+      emit(state.copyWiht(messageList: _messageList));
 
       MessageEntity message =
           await sendMessage.execute(event.token, event.friendID, event.message);
       _messageList.removeLast();
       _messageList.add(message);
-      emit(ChatLoadedState(_messageList));
+      // state da gui tin nhan
+      emit(state.copyWiht(messageList: _messageList));
     } catch (e) {
-      emit(ChatErrorState(e.toString()));
+      emit(state.copyWiht(error: e.toString()));
       event.message.isSend = 3;
       _messageList.removeLast();
       _messageList.add(event.message);
-      emit(ChatLoadedState(_messageList));
+      emit(state.copyWiht(messageList: _messageList));
     }
   }
 }
