@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/theme/app_text.dart';
 import '../../../core/utils/di.dart';
+
 import '../../../domain/user_cases/auth_uc/check_user_use_case.dart';
 import '../../../domain/user_cases/auth_uc/login_use_case.dart';
+import '../../../domain/user_cases/auth_uc/logout_use_case.dart';
 import '../../../domain/user_cases/auth_uc/register_use_case.dart';
 
 part 'auth_event.dart';
@@ -16,7 +18,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(const AuthState()) {
     on<LoginButtonEvent>(_onLoginButtonEvent);
     on<RegisterButtonEvent>(_onRegisterButtonEvent);
-    on<CheckUser>(_onCheckUser);
+    on<CheckUserEvent>(_onCheckUser);
+    on<LogoutEvent>(_onLogoutEvent);
   }
 
   Future<void> _onLoginButtonEvent(
@@ -88,7 +91,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _onCheckUser(CheckUser event, Emitter<AuthState> emit) async {
+  Future<void> _onCheckUser(
+      CheckUserEvent event, Emitter<AuthState> emit) async {
     // kiểm tra thông tin người dùng trong db
     final checkUser = getIt<CheckUserUseCase>();
     final user = await checkUser.execute();
@@ -97,5 +101,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else {
       emit(state.copyWith());
     }
+  }
+
+  Future<void> _onLogoutEvent(
+      LogoutEvent event, Emitter<AuthState> emit) async {
+    // logout and delete token
+    final logout = getIt<LogoutUseCase>();
+    await logout.execute();
+    emit(state.copyWith(token: '', message: ''));
   }
 }

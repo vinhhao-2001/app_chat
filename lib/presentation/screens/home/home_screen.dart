@@ -1,4 +1,3 @@
-import 'package:app_chat/core/utils/flush_helper.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,9 +9,11 @@ import '../../../core/theme/app_color.dart';
 import '../../../core/theme/app_text.dart';
 
 import '../../../core/utils/di.dart';
-import '../../../domain/user_cases/auth_uc/logout_use_case.dart';
+
+import '../../../core/utils/flush_helper.dart';
 import '../../../domain/user_cases/shared_uc/load_avatar_use_case.dart';
 
+import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../blocs/friend/friend_bloc.dart';
 
@@ -353,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _logout(BuildContext context) async {
-    getIt<LogoutUseCase>().execute();
+    context.read<AuthBloc>().add(LogoutEvent());
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const LoginScreen()),

@@ -11,7 +11,8 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<AuthBloc>().add(CheckUser());
+    final bloc = context.read<AuthBloc>();
+    bloc.add(CheckUserEvent());
     return Scaffold(
       body: Center(
         child: BlocListener<AuthBloc, AuthState>(
