@@ -25,17 +25,19 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       FetchMessages event, Emitter<ChatState> emit) async {
     if (event.lastTime == null) {
       _messageList = [];
-      emit(state.copyWiht(messageList: [], error: ''));
       final getMessage = getIt<GetMessageListUseCase>();
       await for (var messageList
           in getMessage.execute(event.token, event.friendID)) {
         _messageList.addAll(messageList);
-        if (messageList.isNotEmpty) {
+        if (_messageList.isNotEmpty) {
           // danh sách lấy về không rỗng thì hiển thị ra màn hình
-          emit(state.copyWiht(messageList: _messageList));
+          emit(state.copyWith(messageList: _messageList));
         } else {
-          emit(state.copyWiht(error: AppText.textChatEmpty));
+          emit(state.copyWith(error: AppText.textChatEmpty));
         }
+      }
+      if (_messageList.isNotEmpty) {
+        emit(state.copyWith(lastTime: _messageList.last.createdAt));
       }
     } else {
       // lấy tin nhắn định kì
@@ -44,7 +46,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           event.token, event.friendID, event.lastTime!);
       if (messageNew.isNotEmpty) {
         _messageList.addAll(messageNew);
-        emit(state.copyWiht(messageList: _messageList));
+        emit(state.copyWith(
+            messageList: _messageList, lastTime: messageNew.last.createdAt));
       }
     }
   }
@@ -54,20 +57,21 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     final sendMessage = getIt<SendMessageUseCase>();
     try {
       _messageList.add(event.message); // state đang gửi
-      emit(state.copyWiht(messageList: _messageList));
+      emit(state.copyWith(messageList: _messageList));
 
       MessageEntity message =
           await sendMessage.execute(event.token, event.friendID, event.message);
+
       _messageList.removeLast();
       _messageList.add(message);
       // state da gui tin nhan
-      emit(state.copyWiht(messageList: _messageList));
+      emit(state.copyWith(messageList: _messageList));
     } catch (e) {
-      emit(state.copyWiht(error: e.toString()));
+      emit(state.copyWith(error: e.toString()));
       event.message.isSend = 3;
       _messageList.removeLast();
       _messageList.add(event.message);
-      emit(state.copyWiht(messageList: _messageList));
+      emit(state.copyWith(messageList: _messageList));
     }
   }
 }

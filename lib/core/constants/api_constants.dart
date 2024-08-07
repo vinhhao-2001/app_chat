@@ -55,4 +55,8 @@ class ApiConstants {
   static const String apiAvatar = 'avatar';
   static const String apiFiles = 'files';
   static const String apiImages = 'images';
+
+  // lỗi khi dùng api
+  static const String apiError =
+      'Kết nối bị gián đoạn.\n Vui lòng kiểm tra lại kết nối internet!';
 }

@@ -40,16 +40,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(message: 'loading')); // auth loading
 
     try {
-      final user = await loginUseCase
-          .execute(event.username, event.password)
-          .timeout(const Duration(seconds: 5));
-      emit(state.copyWith(token: user.token, message: '')); // login success
+      final user = await loginUseCase.execute(event.username, event.password);
+      emit(state.copyWith(token: user.token)); // login success
     } catch (error) {
-      if (error is TimeoutException) {
-        emit(state.copyWith(message: AppText.internetError));
-      } else {
-        emit(state.copyWith(message: error.toString()));
-      }
+      emit(state.copyWith(message: error.toString()));
     }
   }
 
@@ -78,16 +72,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
     emit(state.copyWith()); // loading register
     try {
-      final user = await registerUseCase
-          .execute(event.fullName, event.username, event.password)
-          .timeout(const Duration(seconds: 5));
+      final user = await registerUseCase.execute(
+          event.fullName, event.username, event.password);
       emit(state.copyWith(token: user.token)); // register success
     } catch (error) {
-      if (error is TimeoutException) {
-        emit(state.copyWith(message: AppText.internetError));
-      } else {
-        emit(state.copyWith(message: error.toString()));
-      }
+      emit(state.copyWith(message: error.toString()));
     }
   }
 

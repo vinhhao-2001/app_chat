@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:app_chat/core/theme/app_text.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,27 +37,18 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   void _onUpdateUserInfo(UpdateUserInfo event, Emitter<UserState> emit) async {
     final updateUserUseCase = getIt<UpdateUserUseCase>();
-    final oldState = state;
+
     try {
       if (state.userName.isNotEmpty) {
         // chỉ xử lý khi đã tải xong thông tin trong home
-        final isSuccess = await updateUserUseCase
-            .execute(event.token, event.newName, event.newAvatarPath)
-            .timeout(const Duration(seconds: 5));
+        final isSuccess = await updateUserUseCase.execute(
+            event.token, event.newName, event.newAvatarPath);
         if (isSuccess == true) {
           add(GetUserInfo(event.token));
         }
       }
     } catch (error) {
-      if (error is TimeoutException) {
-        emit(state.copyWith(
-            userName: oldState.userName,
-            fullName: oldState.fullName,
-            avatarImage: oldState.avatarImage,
-            message: AppText.internetError));
-      } else {
-        emit(state.copyWith(message: error.toString()));
-      }
+      emit(state.copyWith(message: error.toString()));
     }
   }
 }

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:convert';
 
+import 'package:app_chat/core/theme/app_text.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,12 +25,9 @@ import '../../../../core/utils/notification_service.dart';
 @LazySingleton()
 class ApiService {
   static const String baseUrl = 'http://10.2.83.185:8888/api/';
-  // static const String baseUrl = 'http://10.2.134.78:8888/api/';
-
-  // static const String baseUrl = 'http://10.2.83.134:8888/api/';
-
   static const String get = 'GET';
   static const String post = 'POST';
+
   // đăng kí tài khoản
   Future<UserModel> register(
       String fullName, String username, String password) async {
@@ -39,22 +37,30 @@ class ApiService {
       ApiConstants.username: username,
       ApiConstants.password: password,
     };
-    // gửi lên server
-    final http.Response response = await http.post(
-      Uri.parse(registerUrl),
-      headers: <String, String>{
-        ApiConstants.type: ApiConstants.contentType,
-      },
-      body: jsonEncode(data),
-    );
-    // xử lý thông tin trả về
-    final Map<String, dynamic> responseBody = jsonDecode(response.body);
-    if (responseBody[ApiConstants.status] == 1) {
-      UserModel user = UserModel.fromMap(responseBody[ApiConstants.data]);
-      await DatabaseHelper().insertOrUpdateUser(user);
-      return user;
-    } else {
-      throw responseBody[ApiConstants.message];
+    try {
+      // gửi lên server
+      final http.Response response = await http.post(
+        Uri.parse(registerUrl),
+        headers: <String, String>{
+          ApiConstants.type: ApiConstants.contentType,
+        },
+        body: jsonEncode(data),
+      );
+      // xử lý thông tin trả về
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+      if (responseBody[ApiConstants.status] == 1) {
+        UserModel user = UserModel.fromMap(responseBody[ApiConstants.data]);
+        await DatabaseHelper().insertOrUpdateUser(user);
+        return user;
+      } else {
+        throw responseBody[ApiConstants.message];
+      }
+    } on TimeoutException {
+      return throw AppText.internetError;
+    } on SocketException {
+      return throw ApiConstants.apiError;
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -65,24 +71,32 @@ class ApiService {
       ApiConstants.username: username,
       ApiConstants.password: password,
     };
-    // gửi lên server
-    final http.Response response = await http
-        .post(
-          Uri.parse(loginUrl),
-          headers: <String, String>{
-            ApiConstants.type: ApiConstants.contentType,
-          },
-          body: jsonEncode(data),
-        )
-        .timeout(const Duration(seconds: 5));
-    // xử lý thông tin trả về
-    final Map<String, dynamic> responseBody = jsonDecode(response.body);
-    if (responseBody[ApiConstants.status] == 1) {
-      UserModel user = UserModel.fromMap(responseBody[ApiConstants.data]);
-      await DatabaseHelper().insertOrUpdateUser(user);
-      return user;
-    } else {
-      throw responseBody[ApiConstants.message];
+    try {
+      // gửi lên server
+      final http.Response response = await http
+          .post(
+            Uri.parse(loginUrl),
+            headers: <String, String>{
+              ApiConstants.type: ApiConstants.contentType,
+            },
+            body: jsonEncode(data),
+          )
+          .timeout(const Duration(seconds: 5));
+      // xử lý thông tin trả về
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+      if (responseBody[ApiConstants.status] == 1) {
+        UserModel user = UserModel.fromMap(responseBody[ApiConstants.data]);
+        await DatabaseHelper().insertOrUpdateUser(user);
+        return user;
+      } else {
+        throw responseBody[ApiConstants.message];
+      }
+    } on TimeoutException {
+      return throw AppText.internetError;
+    } on SocketException {
+      return throw ApiConstants.apiError;
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -91,26 +105,36 @@ class ApiService {
       String token, String? fullName, String? avatarFilePath) async {
     const String updateUrl = '$baseUrl${ApiConstants.updateUser}';
 
-    // gửi thông tin lên server
-    var request = http.MultipartRequest(post, Uri.parse(updateUrl))
-      ..headers[ApiConstants.auth] = '${ApiConstants.bearer} $token';
+    try {
+      // tạo gói thông tin gửi lên server
+      var request = http.MultipartRequest(post, Uri.parse(updateUrl))
+        ..headers[ApiConstants.auth] = '${ApiConstants.bearer} $token';
 
-    if (fullName != null) {
-      request.fields[ApiConstants.fullName] = fullName;
-    }
+      if (fullName != null) {
+        request.fields[ApiConstants.fullName] = fullName;
+      }
 
-    if (avatarFilePath != null && avatarFilePath.startsWith('/')) {
-      request.files.add(await http.MultipartFile.fromPath(
-          ApiConstants.apiAvatar, avatarFilePath));
-    }
-    //  xử lý thông tin trả về
-    final streamedResponse = await request.send();
-    final response = await http.Response.fromStream(streamedResponse);
-    final Map<String, dynamic> responseBody = jsonDecode(response.body);
-    if (responseBody[ApiConstants.status] == 1) {
-      return true;
-    } else {
-      throw responseBody[ApiConstants.message];
+      if (avatarFilePath != null && avatarFilePath.startsWith('/')) {
+        request.files.add(await http.MultipartFile.fromPath(
+            ApiConstants.apiAvatar, avatarFilePath));
+      }
+      //  Gửi thông tin
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse)
+          .timeout(const Duration(seconds: 4));
+      // xử lý thông tin trả về
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+      if (responseBody[ApiConstants.status] == 1) {
+        return true;
+      } else {
+        throw responseBody[ApiConstants.message];
+      }
+    } on TimeoutException {
+      return throw AppText.internetError;
+    } on SocketException {
+      return throw ApiConstants.apiError;
+    } catch (e) {
+      rethrow;
     }
   }
 

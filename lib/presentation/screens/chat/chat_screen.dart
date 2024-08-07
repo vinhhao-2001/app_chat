@@ -14,7 +14,6 @@ import '../../../domain/entities/message_entity.dart';
 import '../../blocs/chat/chat_bloc.dart';
 import '../../blocs/picker/picker_bloc.dart';
 
-import '../../widgets/widget.dart';
 import 'chat_widget/avatar_widget.dart';
 import 'chat_widget/header/header_widget.dart';
 import 'chat_widget/list/message_list_widget.dart';
@@ -38,7 +37,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _editTextSendMessage = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
+
   Timer? _timer;
   DateTime? lastTime;
   final FocusNode _focusNode = FocusNode();
@@ -77,35 +76,13 @@ class _ChatScreenState extends State<ChatScreen> {
                     avatarImage: widget.friendAvatar,
                   ),
                   Expanded(
-                    child: BlocBuilder<ChatBloc, ChatState>(
-                      buildWhen: (a, b) =>
-                          a.messageList != b.messageList || a.error != b.error,
-                      builder: (context, state) {
-                        if (state.messageList.isEmpty && state.error.isEmpty) {
-                          return const Center(child: LoadingWidget(size: 60));
-                        } else if (state.messageList.isNotEmpty) {
-                          final messageList = state.messageList;
-
-                          lastTime = messageList.last.createdAt;
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            _scrollToBottom();
-                          });
-                          return MessageListWidget(
-                            messageList: messageList,
-                            scrollController: _scrollController,
-                            avatarWidget: AvatarWidget(
-                              image: widget.friendAvatar,
-                              size: 15,
-                              isOnline: widget.selectedFriend.isOnline,
-                            ),
-                          );
-                        } else {
-                          lastTime =
-                              DateTime.now().subtract(const Duration(hours: 7));
-                          return const Center(
-                              child: Text(AppText.textChatEmpty));
-                        }
-                      },
+                    child: MessageListWidget(
+                      chatBloc: _chatBloc,
+                      avatarWidget: AvatarWidget(
+                        image: widget.friendAvatar,
+                        size: 15,
+                        isOnline: widget.selectedFriend.isOnline,
+                      ),
                     ),
                   ),
                   _buildSendMessage(),
@@ -162,7 +139,7 @@ class _ChatScreenState extends State<ChatScreen> {
               maxLines: null,
               keyboardType: TextInputType.multiline,
               textInputAction: TextInputAction.newline,
-              onSubmitted: (_) => _sendMessage(),
+              // onSubmitted: (_) => _sendMessage(),
             ),
           ),
           Transform.rotate(
@@ -241,20 +218,10 @@ class _ChatScreenState extends State<ChatScreen> {
         SendMessage(widget.token, widget.selectedFriend.friendID, newMessage));
   }
 
-  void _scrollToBottom() {
-    if (_scrollController.hasClients) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    }
-  }
-
   @override
   void dispose() {
     _editTextSendMessage.dispose();
-    _scrollController.dispose();
+
     _timer?.cancel();
     super.dispose();
   }
