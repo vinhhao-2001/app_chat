@@ -211,12 +211,17 @@ class ApiService {
 
     for (var file in message.files) {
       request.files.add(await http.MultipartFile.fromPath(
-          ApiConstants.apiFiles, file.urlFile));
+        ApiConstants.apiFiles,
+        file.urlFile,
+        filename: file.fileName,
+      ));
     }
+
     for (var image in message.images) {
       request.files.add(await http.MultipartFile.fromPath(
         ApiConstants.apiFiles,
         image.urlImage,
+        filename: image.fileName,
       ));
     }
 
