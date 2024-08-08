@@ -25,6 +25,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       FetchMessages event, Emitter<ChatState> emit) async {
     if (event.lastTime == null) {
       _messageList = [];
+      emit(state.copyWith(messageList: [], error: ''));
       final getMessage = getIt<GetMessageListUseCase>();
       await for (var messageList
           in getMessage.execute(event.token, event.friendID)) {

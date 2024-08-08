@@ -215,7 +215,9 @@ class ApiService {
     }
     for (var image in message.images) {
       request.files.add(await http.MultipartFile.fromPath(
-          ApiConstants.apiFiles, image.urlImage));
+        ApiConstants.apiFiles,
+        image.urlImage,
+      ));
     }
 
     try {

@@ -163,6 +163,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _startPolling() {
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (_chatBloc.state.messageList.isNotEmpty) {
+        lastTime = _chatBloc.state.messageList.last.createdAt;
+      } else {
+        lastTime = DateTime.now().subtract(const Duration(hours: 7));
+      }
       _chatBloc.add(FetchMessages(
           widget.token, widget.selectedFriend.friendID, lastTime));
     });
@@ -221,7 +226,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void dispose() {
     _editTextSendMessage.dispose();
-
     _timer?.cancel();
     super.dispose();
   }
