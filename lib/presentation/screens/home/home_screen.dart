@@ -294,6 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     ).then((value) {
       if (value != null) {
+        if (!context.mounted) return;
         if (value == 1) {
           _showChangeNameDialog(context);
         } else if (value == 2) {
